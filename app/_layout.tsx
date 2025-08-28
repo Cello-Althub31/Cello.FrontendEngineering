@@ -1,4 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Provider as ReduxProvider } from "react-redux";
 import {
   useFonts,
   Poppins_400Regular,
@@ -9,9 +10,10 @@ import {
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import "../styles/global.css";
+import "@/styles/global.css";
 import "react-native-reanimated";
 import { useColorScheme } from "nativewind";
+import { reduxStore } from "@/lib/store/reduxStore";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,16 +58,20 @@ function RootLayoutNav() {
   const { colorScheme } = useColorScheme();
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(routes)/welcome/index" />
-      <Stack.Screen name="(routes)/get-started/index" />
-      <Stack.Screen name="(routes)/auth/login/index" />
-      <Stack.Screen name="(routes)/auth/register/index" />
-      <Stack.Screen name="(routes)/auth/forgot-password/index" />
-      <Stack.Screen name="(routes)/auth/reset-password/index" />
-      <Stack.Screen name="(routes)/auth/verify/index" />
-      <Stack.Screen name="(routes)/success/index" />
-    </Stack>
+    <ReduxProvider store={reduxStore}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(routes)/welcome/index" />
+        <Stack.Screen name="(routes)/get-started/index" />
+        <Stack.Screen name="(routes)/auth/login/index" />
+        <Stack.Screen name="(routes)/auth/register/index" />
+        <Stack.Screen name="(routes)/auth/forgot-password/index" />
+        <Stack.Screen name="(routes)/auth/reset-password/index" />
+        <Stack.Screen name="(routes)/auth/verify/index" />
+        <Stack.Screen name="(routes)/success/index" />
+        <Stack.Screen name="(routes)/(tabs)/home/index" />
+        <Stack.Screen name="(routes)/medication-reminder/index" />
+      </Stack>
+    </ReduxProvider>
   );
 }

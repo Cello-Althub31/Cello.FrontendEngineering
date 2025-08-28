@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "@/components/Header";
 import GradientBackground from "@/components/shared/gradient-bg";
 import KeyboardAvoidingWrapper from "@/components/shared/keyboard-avoiding-wrapper";
@@ -9,11 +9,58 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { View, Text, TouchableOpacity, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import { isValidEmail, isValidPassword } from "@/lib/utils/validators";
+import { login } from "@/lib/auth/authSlice";
 
-export default function RegisterScreen() {
+export default function LoginScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isPasswordShown, setIsPasswordShown] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.auth.isLoading);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // clear error while user starts typing
+    if (formErrors[field]) {
+      setFormErrors((prev) => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const handleLogin = async () => {
+    const errors: Record<string, string> = {};
+
+    if (!isValidEmail(formData.email)) {
+      errors.email = "Please enter a valid email";
+    }
+
+    const passwordError = isValidPassword(formData.password);
+    if (passwordError) {
+      errors.password = passwordError;
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    try {
+      const resultAction = await dispatch(login(formData));
+
+      if (login.fulfilled.match(resultAction)) {
+        router.push("/(routes)/(tabs)/home");
+      } else {
+        alert(resultAction.payload || "Login failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
+    }
+  };
 
   return (
     <KeyboardAvoidingWrapper>
@@ -65,7 +112,10 @@ export default function RegisterScreen() {
               labelFontFamily: "poppins-medium",
               labelFontSize: 14,
               labelErrorColor: "#EF4444",
-              onChangeText: (text) => console.log(text),
+              autoCapitalize: "none",
+              value: formData.email,
+              onChangeText: (text) => handleInputChange("email", text),
+              labelError: formErrors.email,
             }}
           />
           <View className="relative">
@@ -78,16 +128,24 @@ export default function RegisterScreen() {
                 labelFontFamily: "poppins-medium",
                 labelFontSize: 14,
                 labelErrorColor: "#EF4444",
-                onChangeText: (text) => console.log(text),
+                value: formData.password,
+                onChangeText: (text) => handleInputChange("password", text),
+                labelError: formErrors.password,
               }}
             />
             <TouchableOpacity
-              style={{ position: "absolute", right: 10, top: 35 }}
+              style={{
+                position: "absolute",
+                right: 12,
+                top: "50%",
+                transform: [{ translateY: -10 }],
+                padding: 4,
+              }}
               onPress={() => setIsPasswordShown(!isPasswordShown)}
             >
               <FontAwesome5
                 name={!isPasswordShown ? "eye-slash" : "eye"}
-                size={20}
+                size={18}
                 color="#A1A1AA"
               />
             </TouchableOpacity>
@@ -101,9 +159,10 @@ export default function RegisterScreen() {
           </Pressable>
 
           <Button
-            onPress={() => router.push("/(routes)/(tabs)/home")}
+            onPress={handleLogin}
             className="bg-primary mt-4"
-            title="Login"
+            title={isLoading ? "Logging in..." : "Login"}
+            disabled={isLoading}
             style={{ paddingVertical: 16, borderRadius: 8 }}
           />
           <Text className="text-center text-sm mt-4 font-poppins">

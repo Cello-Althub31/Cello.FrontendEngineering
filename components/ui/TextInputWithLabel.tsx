@@ -38,7 +38,6 @@ const TextInputWithLabel: React.FC<{ props: TextInputWithLabelProps }> = ({
         style={{ fontSize: labelFontSize }}
       >
         {label}
-        <Text style={{ color: labelErrorColor }}>{labelError}</Text>
       </Text>
       <TextInput
         {...rest}
@@ -50,12 +49,13 @@ const TextInputWithLabel: React.FC<{ props: TextInputWithLabelProps }> = ({
         keyboardType={keyboardType}
         className="w-full border rounded-2xl font-poppins text-sm"
         style={{
-            borderColor: "#D1D5DB",
-            paddingVertical: 10,
-            paddingHorizontal: 10,
+          borderColor: "#D1D5DB",
+          paddingVertical: 10,
+          paddingHorizontal: 10,
           backgroundColor: backgroundColor,
         }}
       />
+      <Text style={{ fontSize: 12, color: labelErrorColor }}>{labelError}</Text>
     </View>
   );
 };
