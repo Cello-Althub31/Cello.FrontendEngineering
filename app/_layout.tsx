@@ -69,7 +69,8 @@ function RootLayoutNav() {
         <Stack.Screen name="(routes)/auth/reset-password/index" />
         <Stack.Screen name="(routes)/auth/verify/index" />
         <Stack.Screen name="(routes)/success/index" />
-        <Stack.Screen name="(routes)/(tabs)/home/index" />
+        <Stack.Screen name="(routes)/home/index" />
+        <Stack.Screen name="(routes)/profile/index" />
         <Stack.Screen name="(routes)/medication-reminder/index" />
       </Stack>
     </ReduxProvider>

@@ -52,7 +52,7 @@ export default function LoginScreen() {
       const resultAction = await dispatch(login(formData));
 
       if (login.fulfilled.match(resultAction)) {
-        router.push("/(routes)/(tabs)/home");
+        router.push("/(routes)/home");
       } else {
         alert(resultAction.payload || "Login failed");
       }
