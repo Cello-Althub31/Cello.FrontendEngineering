@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { secureStorage } from "@/lib/utils/secureStorage";
 import authApi from "@/lib/api/auth";
 import {
   AuthState,
@@ -24,10 +25,47 @@ export const signup = createAsyncThunk(
       const res = await authApi.signup(payload);
       return res.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Signup failed");
+      console.error("console error:", error);
+      if (error.response) {
+        const status = error.response.status;
+        const data = error.response.data;
+
+        // Handle 429 Too Many Requests specifically
+        if (status === 429) {
+          return rejectWithValue({
+            status,
+            message: "Too many signup attempts. Please try again later.",
+          });
+        }
+
+        // Handle Mongo duplicate key (email already exists)
+        if (
+          data?.error?.includes("duplicate key error") &&
+          data?.error?.includes("email")
+        ) {
+          return rejectWithValue({
+            status,
+            message: "This email is already registered.",
+          });
+        }
+
+        // Fallback for other API errors
+        return rejectWithValue({
+          status,
+          message: data?.error || "Something went wrong. Please try again.",
+        });
+      }
+
+      // If it’s a network error or unexpected error
+      return rejectWithValue({
+        status: 500,
+        message:
+          error.message || "Network error. Please check your connection.",
+      });
     }
   }
 );
+
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -100,17 +138,33 @@ const authSlice = createSlice({
     logout(state) {
       state.token = null;
       state.user = null;
+      secureStorage.clearTokens();
+      secureStorage.clearUser();
     },
   },
+
   extraReducers: (builder) => {
     builder
+      .addCase(rehydrateAuth.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.token = action.payload.tokens?.accessToken || null;
+          state.user = action.payload.user;
+        }
+      })
       .addCase(login.fulfilled, (state, action) => {
         state.token = action.payload.token;
+        state.user = action.payload.user;
         state.error = null;
+
+        secureStorage.storeTokens(action.payload.token);
+        secureStorage.storeUser(action.payload.user);
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.error = null;
+
+        secureStorage.storeTokens(action.payload.token);
+        secureStorage.storeUser(action.payload.user);
       })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
@@ -135,6 +189,22 @@ const authSlice = createSlice({
       );
   },
 });
+
+export const rehydrateAuth = createAsyncThunk(
+  "auth/rehydrateAuth",
+  async (_, { rejectWithValue }) => {
+    try {
+      const tokens = await secureStorage.getTokens();
+      const user = await secureStorage.getUser();
+      if (tokens && user) {
+        return { tokens, user };
+      }
+      return null;
+    } catch (e) {
+      return rejectWithValue("Failed to restore auth");
+    }
+  }
+);
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;

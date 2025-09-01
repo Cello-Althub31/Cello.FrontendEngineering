@@ -35,11 +35,9 @@ export default function HomeScreen() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const monthName = formatMonth(selectedDate);
 
-  
-    
   const handleCreateMedication = async () => {
     router.push({
-      pathname: "/(routes)/medication-reminder",
+      pathname: "/(drawer)/medication-reminder",
       params: { route: "create-medication" },
     });
   };

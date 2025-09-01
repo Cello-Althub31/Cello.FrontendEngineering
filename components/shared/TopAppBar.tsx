@@ -19,7 +19,6 @@ type TopAppBarProps = {
 };
 
 export default function TopAppBar({
-  
   unreadCount = 0,
   onMenu,
   onNotifications,

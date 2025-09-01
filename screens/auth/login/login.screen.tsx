@@ -10,7 +10,7 @@ import { useState } from "react";
 import { View, Text, TouchableOpacity, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import { isValidEmail, isValidPassword } from "@/lib/utils/validators";
+import { isValidEmail } from "@/lib/utils/validators";
 import { login } from "@/lib/auth/authSlice";
 
 export default function LoginScreen() {
@@ -38,11 +38,6 @@ export default function LoginScreen() {
       errors.email = "Please enter a valid email";
     }
 
-    const passwordError = isValidPassword(formData.password);
-    if (passwordError) {
-      errors.password = passwordError;
-    }
-
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
@@ -52,7 +47,7 @@ export default function LoginScreen() {
       const resultAction = await dispatch(login(formData));
 
       if (login.fulfilled.match(resultAction)) {
-        router.push("/(routes)/home");
+        router.push("/(drawer)/home");
       } else {
         alert(resultAction.payload || "Login failed");
       }

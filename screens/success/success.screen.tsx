@@ -37,7 +37,7 @@ export default function SuccessScreen() {
         <Button
           onPress={() => {
             route?.toString() === "register"
-              ? router.replace("/(routes)/home")
+              ? router.replace("/(routes)/profile")
               : router.push("/(routes)/auth/login");
           }}
           className="bg-primary mt-4 w-full"

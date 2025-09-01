@@ -1,4 +1,3 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Provider as ReduxProvider } from "react-redux";
 import {
   useFonts,
@@ -9,23 +8,20 @@ import {
 } from "@expo-google-fonts/poppins";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "@/styles/global.css";
 import "react-native-reanimated";
 import { useColorScheme } from "nativewind";
 import { reduxStore } from "@/lib/store/reduxStore";
+import { useAppSelector, useAppDispatch } from "@/hooks";
+import { rehydrateAuth } from "@/lib/auth/authSlice";
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
+export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
+  initialRouteName: "(routes)",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -36,7 +32,6 @@ export default function RootLayout() {
     Poppins_700Bold,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -47,32 +42,36 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+  if (!loaded) return null;
 
-  return <RootLayoutNav />;
+  return (
+    <ReduxProvider store={reduxStore}>
+      <RootLayoutNav />
+    </ReduxProvider>
+  );
 }
 
 function RootLayoutNav() {
   const { colorScheme } = useColorScheme();
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    dispatch(rehydrateAuth()).finally(() => setHydrated(true));
+  }, [dispatch]);
+
+  if (!hydrated) {
+    return null; // or splash/loading screen
+  }
 
   return (
-    <ReduxProvider store={reduxStore}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="(routes)/welcome/index" />
-        <Stack.Screen name="(routes)/get-started/index" />
-        <Stack.Screen name="(routes)/auth/login/index" />
-        <Stack.Screen name="(routes)/auth/register/index" />
-        <Stack.Screen name="(routes)/auth/forgot-password/index" />
-        <Stack.Screen name="(routes)/auth/reset-password/index" />
-        <Stack.Screen name="(routes)/auth/verify/index" />
-        <Stack.Screen name="(routes)/success/index" />
-        <Stack.Screen name="(routes)/home/index" />
-        <Stack.Screen name="(routes)/profile/index" />
-        <Stack.Screen name="(routes)/medication-reminder/index" />
-      </Stack>
-    </ReduxProvider>
+    <Stack screenOptions={{ headerShown: false }}>
+      {user ? (
+        <Stack.Screen name="(drawer)" />
+      ) : (
+        <Stack.Screen name="(routes)" />
+      )}
+    </Stack>
   );
 }
