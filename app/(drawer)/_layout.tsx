@@ -55,6 +55,49 @@ export default function DrawerLayout() {
           ),
         }}
       />
+      <Drawer.Screen
+        name="active-reminder/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <Ionicons name="checkmark-circle-outline" size={size} color={color} />
+              <Text>Active Reminder</Text>
+            </View>
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="hydration-reminder/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <Ionicons name="water-outline" size={size} color={color} />
+              <Text>Hydration Reminder</Text>
+            </View>
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="doctors-appointment/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <Ionicons name="person-outline" size={size} color={color} />
+              <Text>Doctors Appointment</Text>
+            </View>
+          ),
+        }}
+      />
+
       {/* Add more drawer screens here */}
     </Drawer>
   );
