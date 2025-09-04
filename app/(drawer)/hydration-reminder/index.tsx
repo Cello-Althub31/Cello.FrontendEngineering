@@ -1,4 +1,4 @@
-import HydrationReminderScreen from "@/screens/medication-reminder/medication-reminder.screen";
+import HydrationReminderScreen from "@/screens/hydration-reminder/hydration";
 
 const HydrationReminder = () => {
   return (
