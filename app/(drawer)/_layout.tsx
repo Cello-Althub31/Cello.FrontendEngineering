@@ -1,5 +1,5 @@
 import { Drawer } from "expo-router/drawer";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 import { Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 
@@ -92,7 +92,7 @@ export default function DrawerLayout() {
               style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
             >
               <Ionicons name="person-outline" size={size} color={color} />
-              <Text>Doctors Appointment</Text>
+              <Text >Doctors Appointment</Text>
             </View>
           ),
         }}

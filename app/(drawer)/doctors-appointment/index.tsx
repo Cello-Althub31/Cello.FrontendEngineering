@@ -1,4 +1,6 @@
+import { StyleSheet, Text, View } from 'react-native'
 import AppointmentScreen from "@/screens/doctors-appointments/appointments";
+
 
 const DoctorsAppointment = () => {
   return (
@@ -9,3 +11,5 @@ const DoctorsAppointment = () => {
 };
 
 export default DoctorsAppointment;
+
+const styles = StyleSheet.create({})

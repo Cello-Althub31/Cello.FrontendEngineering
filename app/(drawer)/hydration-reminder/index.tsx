@@ -1,3 +1,4 @@
+import { StyleSheet, Text, View } from 'react-native'
 import HydrationReminderScreen from "@/screens/hydration-reminder/hydration";
 
 const HydrationReminder = () => {
@@ -9,3 +10,5 @@ const HydrationReminder = () => {
 };
 
 export default HydrationReminder;
+
+const styles = StyleSheet.create({})
