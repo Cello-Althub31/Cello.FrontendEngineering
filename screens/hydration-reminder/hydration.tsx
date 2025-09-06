@@ -1,8 +1,9 @@
-import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal, FlatList } from 'react-native'
 import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 const HydrationScreen = () => {
    const handleGoBack = () => {
@@ -14,6 +15,29 @@ const HydrationScreen = () => {
    const handleScreen = () => {
       router.push("/(drawer)/doctors-appointment");
    }
+
+   const [showTimePicker, setShowTimePicker] = React.useState(false);
+   const [reminderTime, setReminderTime] = React.useState(new Date());
+
+   const handleTimeChange = (
+      event: DateTimePickerEvent,
+      selectedDate?: Date | undefined
+   ): void => {
+      if (event.type === 'set' && selectedDate) {
+         setReminderTime(selectedDate);
+      }
+      setShowTimePicker(false);
+   };
+
+   const frequencyOptions = [
+      'Once a day',
+      'Twice a day',
+      'Every 3 hours',
+      'Custom',
+   ];
+
+   const [showFrequencyModal, setShowFrequencyModal] = React.useState(false);
+   const [selectedFrequency, setSelectedFrequency] = React.useState(frequencyOptions[0]);
 
    return (
       <LinearGradient
@@ -37,24 +61,86 @@ const HydrationScreen = () => {
                   <Text style={styles.subHeader}>
                      Keep your body refreshed—let Cello help you stay hydrated.
                   </Text>
-                  <View style={styles.formContainer}>
-                     <View style={styles.formSection}>
+                    <View style={styles.formContainer}>
+                      <View style={styles.formSection}>
                         <Text style={styles.label}>Remind me at</Text>
-                        <TextInput style={styles.input} placeholder="Name (e.g. Ibuprofen)" />
-                     </View>
+                        <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+                           <TextInput
+                              style={styles.input}
+                              value={reminderTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              editable={false}
+                              pointerEvents="none"
+                           />
+                        </TouchableOpacity>
+                        {showTimePicker && (
+                           <DateTimePicker
+                              value={reminderTime}
+                              mode="time"
+                              is24Hour={false}
+                              display="default"
+                              onChange={handleTimeChange}
+                           />
+                        )}
+                      </View>
 
                      <View style={styles.formSection}>
                         <Text style={styles.label}>Frequency</Text>
-                        <View style={styles.dropdown}>
-                           <Text style={styles.dropdownText}>Selected Option</Text>
-                           <Ionicons name="chevron-down" size={20} color="#888" />
-                        </View>
+                        <TouchableOpacity
+                          style={styles.dropdown}
+                          onPress={() => setShowFrequencyModal(true)}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.dropdownText}>{selectedFrequency}</Text>
+                          <Ionicons name="chevron-down" size={20} color="#888" />
+                        </TouchableOpacity>
+                        <Modal
+                          visible={showFrequencyModal}
+                          transparent
+                          animationType="slide"
+                          onRequestClose={() => setShowFrequencyModal(false)}
+                        >
+                          <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(0,0,0,0.3)'
+                          }}>
+                            <View style={{
+                              backgroundColor: '#fff',
+                              borderRadius: 10,
+                              padding: 20,
+                              width: '80%',
+                            }}>
+                              <FlatList
+                                data={frequencyOptions}
+                                keyExtractor={(item) => item}
+                                renderItem={({ item }) => (
+                                  <TouchableOpacity
+                                    style={{ paddingVertical: 15 }}
+                                    onPress={() => {
+                                      setSelectedFrequency(item);
+                                      setShowFrequencyModal(false);
+                                    }}
+                                  >
+                                    <Text style={{ fontSize: 16 }}>{item}</Text>
+                                  </TouchableOpacity>
+                                )}
+                              />
+                              <TouchableOpacity
+                                style={{ marginTop: 10, alignSelf: 'flex-end' }}
+                                onPress={() => setShowFrequencyModal(false)}
+                              >
+                                <Text style={{ color: '#E64646', fontWeight: 'bold' }}>Cancel</Text>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </Modal>
                      </View>
                   </View>
 
                   <View style={styles.buttonContainer}>
                      <TouchableOpacity style={styles.nextButton1} onPress={handleNext}>
-                        <Text style={styles.nextButtonText1}>You can always set up reminders later.</Text>
+                        <Text style={styles.nextButtonText1}> 💡 You can always set up reminders later.</Text>
                      </TouchableOpacity>
                      <TouchableOpacity style={styles.nextButton} onPress={handleScreen}>
                         <Text style={styles.nextButtonText}>Next</Text>

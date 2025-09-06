@@ -26,7 +26,7 @@ const ActiveScreen = () => {
                   <TouchableOpacity onPress={handleGoBack}>
                      <AntDesign name="leftcircleo" size={30} color="black" />
                   </TouchableOpacity>
-                  <Text style={styles.headerText}>Doctor Appointment</Text>
+                  <Text style={styles.headerText}>Active Reminders</Text>
                   <Text style={styles.subHeader}>
                      Get alerts before your appointments.
                   </Text>

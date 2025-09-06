@@ -33,7 +33,7 @@ const MedicationReminderScreen = () => {
                   <TouchableOpacity onPress={handleGoBack}>
                      <AntDesign name="leftcircleo" size={30} color="black" />
                   </TouchableOpacity>
-                  <Text style={styles.headerText}>Emergency Contacts</Text>
+                  <Text style={styles.headerText}>Medication Reminder</Text>
                   <Text style={styles.subHeader}>
                      Never miss a dose—get gentle nudges at the right time.
                   </Text>
@@ -97,7 +97,7 @@ const MedicationReminderScreen = () => {
 
                   <View style={styles.buttonContainer}>
                      <TouchableOpacity style={styles.nextButton1} onPress={handleNext}>
-                        <Text style={styles.nextButtonText1}>You can always set up reminders later.</Text>
+                        <Text style={styles.nextButtonText1}> 💡 You can always set up reminders later.</Text>
                      </TouchableOpacity>
                      <TouchableOpacity style={styles.nextButton} onPress={handleScreen}>
                         <Text style={styles.nextButtonText}>Next</Text>
