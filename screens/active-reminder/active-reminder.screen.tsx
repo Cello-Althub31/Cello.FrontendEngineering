@@ -26,7 +26,7 @@ const ActiveScreen = () => {
                   <TouchableOpacity onPress={handleGoBack}>
                      <AntDesign name="leftcircleo" size={30} color="black" />
                   </TouchableOpacity>
-                  <Text style={styles.headerText}>Active Reminders</Text>
+                  <Text style={styles.headerText}>Doctor Appointment</Text>
                   <Text style={styles.subHeader}>
                      Get alerts before your appointments.
                   </Text>
@@ -69,7 +69,7 @@ const ActiveScreen = () => {
                         <View style={styles.header}>
                            <View style={styles.headerLeft}>
                               <Feather name="flag" size={16} color="white" />
-                              <Text style={styles.headerText1}>Reminder 1</Text>
+                              <Text style={styles.headerText1}>Reminder 2</Text>
                            </View>
                            <Feather name="more-horizontal" size={24} color="white" />
                         </View>
@@ -103,7 +103,7 @@ const ActiveScreen = () => {
                         <View style={styles.header}>
                            <View style={styles.headerLeft}>
                               <Feather name="flag" size={16} color="white" />
-                              <Text style={styles.headerText1}>Reminder 1</Text>
+                              <Text style={styles.headerText1}>Reminder 3</Text>
                            </View>
                            <Feather name="more-horizontal" size={24} color="white" />
                         </View>
@@ -137,7 +137,7 @@ const ActiveScreen = () => {
                         <View style={styles.header}>
                            <View style={styles.headerLeft}>
                               <Feather name="flag" size={16} color="white" />
-                              <Text style={styles.headerText1}>Reminder 1</Text>
+                              <Text style={styles.headerText1}>Reminder 4</Text>
                            </View>
                            <Feather name="more-horizontal" size={24} color="white" />
                         </View>

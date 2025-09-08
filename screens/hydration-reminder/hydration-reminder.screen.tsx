@@ -10,11 +10,11 @@ const HydrationScreen = () => {
       router.back();
    };
    const handleNext = () => {
-      router.push("/(drawer)/active-reminder");
-   }
+      router.push("/active-reminder");
+   };
    const handleScreen = () => {
-      router.push("/(drawer)/doctors-appointment");
-   }
+      router.push("/hydration-reminder");
+   };
 
    const [showTimePicker, setShowTimePicker] = React.useState(false);
    const [reminderTime, setReminderTime] = React.useState(new Date());

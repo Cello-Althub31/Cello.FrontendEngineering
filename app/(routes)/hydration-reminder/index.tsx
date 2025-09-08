@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import HydrationReminderScreen from "@/screens/hydration-reminder/hydration";
+import HydrationReminderScreen from "@/screens/hydration-reminder/hydration-reminder.screen";
 
 const HydrationReminder = () => {
   return (

@@ -9,11 +9,11 @@ const MedicationReminderScreen = () => {
       router.back();
    };
    const handleNext = () => {
-      router.push("/(drawer)/hydration-reminder");
-   }
+      router.push("/hydration-reminder");
+   };
    const handleScreen = () => {
-      router.push("/(drawer)/doctors-appointment");
-   }
+      router.push("/doctors-appointment");
+   };
 
    return (
       <LinearGradient

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import AppointmentScreen from "@/screens/doctors-appointments/appointments";
+import AppointmentScreen from "@/screens/doctors-appointments/doctors-appointments.screen";
 
 
 const DoctorsAppointment = () => {
