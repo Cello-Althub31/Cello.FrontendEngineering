@@ -12,6 +12,8 @@ import { Calendar, DateData } from "react-native-calendars";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
+import JournalCalendarScreen from "@/app/(routes)/journal-calendar";
+import JournalEntry from "@/app/(routes)/journal-entry";
 
 const JournalCalendar = () => {
   const [selectedDate, setSelectedDate] = useState("");
@@ -89,7 +91,7 @@ const JournalCalendar = () => {
   );
 };
 
-export default JournalCalendar;
+export default JournalCalendarScreen;
 
 const styles = StyleSheet.create({
   container: {
