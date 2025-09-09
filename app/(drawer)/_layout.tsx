@@ -55,51 +55,6 @@ export default function DrawerLayout() {
           ),
         }}
       />
-     
-      <Drawer.Screen
-        name="wellbeing-calendar/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="calendar-outline" size={size} color={color} />
-              <Text>Wellbeing Calendar</Text>
-            </View>
-          ),
-        }}
-      />
-
-      <Drawer.Screen
-        name="journal/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="book-outline" size={size} color={color} />
-              <Text>Journal</Text>
-            </View>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="notifications/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="notifications-outline" size={size} color={color} />
-              <Text>Notifications</Text>
-            </View>
-          ),
-        }}
-      />
-
       {/* Add more drawer screens here */}
     </Drawer>
   );
