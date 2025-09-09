@@ -1,7 +1,15 @@
-import JournalScreen from "@/screens/journal/journal.Screen";
+import React from "react";
+import { StyleSheet } from "react-native";
 
-const Journal = () => {
-  return <JournalScreen />;
+import Journal from "@/screens/journal/journal.Screen";
+
+const JournalScreen = () => {
+  return (
+    <>
+      <Journal />
+    </>
+  );
 };
 
-export default Journal;
+export default JournalScreen;
+const styles = StyleSheet.create({});

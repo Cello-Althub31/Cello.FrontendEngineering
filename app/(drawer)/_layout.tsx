@@ -85,6 +85,20 @@ export default function DrawerLayout() {
           ),
         }}
       />
+      <Drawer.Screen
+        name="notifications/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <Ionicons name="notifications-outline" size={size} color={color} />
+              <Text>Notifications</Text>
+            </View>
+          ),
+        }}
+      />
 
       {/* Add more drawer screens here */}
     </Drawer>

@@ -10,10 +10,10 @@ const HydrationScreen = () => {
       router.back();
    };
    const handleNext = () => {
-      router.push("/active-reminder");
+      router.push("/(drawer)/home");
    };
    const handleScreen = () => {
-      router.push("/hydration-reminder");
+      router.push("/active-reminder");
    };
 
    const [showTimePicker, setShowTimePicker] = React.useState(false);

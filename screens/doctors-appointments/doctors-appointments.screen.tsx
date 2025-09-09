@@ -9,10 +9,10 @@ const AppointmentScreen = () => {
       router.back();
    };
    const handleNext = () => {
-      router.push("/hydration-reminder");
+      router.push("/(drawer)/home");
    }
    const handleScreen = () => {
-      router.push("/doctors-appointment");
+      router.push("/hydration-reminder");
    }
 
    return (
