@@ -1,5 +1,5 @@
 import { Drawer } from "expo-router/drawer";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 
