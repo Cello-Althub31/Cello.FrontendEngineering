@@ -16,6 +16,8 @@ import { reduxStore } from "@/lib/store/reduxStore";
 import { useAppSelector, useAppDispatch } from "@/hooks";
 import { rehydrateAuth } from "@/lib/auth/authSlice";
 
+
+
 export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
@@ -66,12 +68,15 @@ function RootLayoutNav() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      {user ? (
-        <Stack.Screen name="(drawer)" />
-      ) : (
-        <Stack.Screen name="(routes)" />
-      )}
-    </Stack>
+    <>
+      <Stack screenOptions={{ headerShown: false }}>
+        {user ? (
+          <Stack.Screen name="(drawer)" />
+        ) : (
+          <Stack.Screen name="(routes)" />
+        )}
+      </Stack>
+
+    </>
   );
 }

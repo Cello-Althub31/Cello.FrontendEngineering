@@ -55,34 +55,6 @@ export default function DrawerLayout() {
           ),
         }}
       />
-       <Drawer.Screen
-        name="profile/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="person-outline" size={size} color={color} />
-              <Text>Profile</Text>
-            </View>
-          ),
-        }}
-      />
-    
-<Drawer.Screen
-  name="settings/index"
-  options={{
-    title: "Settings",
-    drawerIcon: ({ color, size }) => (
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-        <Ionicons name="settings-outline" size={size} color={color} />
-        <Text>Settings</Text>
-      </View>
-    ),
-  }}
-/>
-
       {/* Add more drawer screens here */}
     </Drawer>
   );
