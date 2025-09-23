@@ -6,9 +6,8 @@ import {
   ImageBackground,
   Platform,
   Image,
-  SafeAreaView,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function WelcomeProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -21,7 +20,7 @@ export default function WelcomeProfileScreen() {
       resizeMode="cover"
     >
       <SafeAreaView className="flex-1 items-center justify-center px-8">
-        
+
         <View className="bg-white rounded-full items-center justify-center w-28 h-28 mb-8">
           <Image
             source={require("@/assets/icons/ios-light.png")}
@@ -30,7 +29,7 @@ export default function WelcomeProfileScreen() {
           />
         </View>
 
-        
+
         <Text className="text-white text-[28px] font-bold mb-8">Welcome</Text>
 
 

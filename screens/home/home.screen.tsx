@@ -5,12 +5,11 @@ import {
   Pressable,
   FlatList,
   Image,
-  SafeAreaView,
 } from "react-native";
-import { EvilIcons, Feather } from "@expo/vector-icons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { EvilIcons } from "@expo/vector-icons";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import TopAppBar from "@/components/shared/TopAppBar"; 
+import TopAppBar from "@/components/shared/TopAppBar";
 import Button from "@/components/ui/Button";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -62,7 +61,7 @@ export default function HomeScreen() {
     a.getDate() === b.getDate();
 
   return (
-     <SafeAreaView
+    <SafeAreaView
       style={{ paddingTop: insets.top }}
       className="flex-1 bg-white"
     >
@@ -99,21 +98,18 @@ export default function HomeScreen() {
           return (
             <Pressable
               onPress={() => setSelectedDate(item.date)}
-              className={`w-14 h-14 items-center rounded-xl border mx-1 py-2 ${
-                active ? "border-primary" : "border-white"
-              }`}
+              className={`w-14 h-14 items-center rounded-xl border mx-1 py-2 ${active ? "border-primary" : "border-white"
+                }`}
             >
               <Text
-                className={`text-base font-semibold ${
-                  active ? "text-primary" : "text-black"
-                }`}
+                className={`text-base font-semibold ${active ? "text-primary" : "text-black"
+                  }`}
               >
                 {item.dayNum}
               </Text>
               <Text
-                className={`text-[11px] mt-1 ${
-                  active ? "text-primary font-bold" : "text-grey"
-                }`}
+                className={`text-[11px] mt-1 ${active ? "text-primary font-bold" : "text-grey"
+                  }`}
               >
                 {item.label}
               </Text>
@@ -144,7 +140,7 @@ export default function HomeScreen() {
         />
       </View>
 
-      
+
     </SafeAreaView>
   );
 }

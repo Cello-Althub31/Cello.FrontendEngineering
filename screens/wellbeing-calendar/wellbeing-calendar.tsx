@@ -13,7 +13,7 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { router } from "expo-router"; 
+import { router } from "expo-router";
 
 
 export default function ManageNotificationScreen() {
@@ -21,35 +21,35 @@ export default function ManageNotificationScreen() {
   const navigation = useNavigation();
 
   const reminders = [
-  {
-    key: "medication",
-    title: "Medication Reminder",
-    description: "Never miss a dose—get gentle nudges at the right time.",
-    icon: "pill",
-  },
-  {
-    key: "hydration",
-    title: "Hydration Reminders",
-    description: "Keep your body refreshed—let Cello help you stay hydrated.",
-    icon: "water-droplet",
-  },
-  {
-    key: "appointments",
-    title: "Doctor Appointments",
-    description: "Get alerts before your appointments.",
-    icon: "doctor",
-  },
+    {
+      key: "medication",
+      title: "Medication Reminder",
+      description: "Never miss a dose—get gentle nudges at the right time.",
+      icon: "pill",
+    },
+    {
+      key: "hydration",
+      title: "Hydration Reminders",
+      description: "Keep your body refreshed—let Cello help you stay hydrated.",
+      icon: "water-droplet",
+    },
+    {
+      key: "appointments",
+      title: "Doctor Appointments",
+      description: "Get alerts before your appointments.",
+      icon: "doctor",
+    },
   ];
   const getIconSource = (iconName: string) => {
-  switch (iconName) {
-    case 'pill':
-      return require('@/assets/icons/pill.png');
-    case 'water-droplet':
-      return require('@/assets/icons/water-droplet.png');
-    case 'doctor':
-      return require('@/assets/icons/doctor.png');
+    switch (iconName) {
+      case 'pill':
+        return require('@/assets/icons/pill.png');
+      case 'water-droplet':
+        return require('@/assets/icons/water-droplet.png');
+      case 'doctor':
+        return require('@/assets/icons/doctor.png');
+    };
   };
-};
 
 
 
@@ -90,21 +90,21 @@ export default function ManageNotificationScreen() {
         body: body,
 
       },
-      trigger: null, 
+      trigger: null,
     });
 
     // Alternative trigger 
-    
+
     // For time-based trigger (5 seconds from now):
     // trigger: { seconds: 5 } as Notifications.TimeIntervalTriggerInput,
-    
+
     // For daily trigger (specific time):
     // trigger: { 
     //   hour: 9, 
     //   minute: 0, 
     //   repeats: true 
     // } as Notifications.DailyTriggerInput,
-    
+
     // For date-based trigger:
     // trigger: { 
     //   date: new Date(Date.now() + 5 * 1000) 
@@ -129,16 +129,16 @@ export default function ManageNotificationScreen() {
       }
 
       Alert.alert("Reminders Set", "Your notifications are scheduled.");
-      
-      
-      router.push("/home"); 
+
+
+      router.push("/home");
     } catch (error) {
       Alert.alert("Error", "Failed to save reminders.");
     }
   };
 
   const navigateToHome = () => {
- 
+
     router.push("/home");
   };
 
@@ -148,12 +148,12 @@ export default function ManageNotificationScreen() {
       <View className="mb-6 flex-row items-center">
 
         <Image
-    source={require('@/assets/icons/megaphone.png')}
-    style={{ width: 24, height: 24, marginRight: 8 }}
-    resizeMode="contain"
-  />
+          source={require('@/assets/icons/megaphone.png')}
+          style={{ width: 24, height: 24, marginRight: 8 }}
+          resizeMode="contain"
+        />
         <Text className="text-xl font-semibold mb-1">Stay one step Ahead</Text>
-        </View>
+      </View>
       <View className="mb-4">
         <Text className="text-gray-600">
           Choose what you want Cello to remind you about. You can always adjust
@@ -167,30 +167,29 @@ export default function ManageNotificationScreen() {
         </Text>
         <Text className="text-zinc-900">Watch some tutorials</Text>
         <Image source={require('@/assets/icons/videoplay.png')} style={{ width: 24, height: 24, marginRight: 8, position: 'absolute', right: 16, top: 16 }}
-    resizeMode="contain"
-  />
+          resizeMode="contain"
+        />
       </View>
 
       {reminders.map((item) => (
         <TouchableOpacity
           key={item.key}
           onPress={() => toggleReminder(item.key)}
-          className={`flex-row items-start p-4 mb-4 rounded-lg border ${
-            selected.includes(item.key)
-              ? "border-primary bg-primary/10"
-              : "border-gray-300"
-          }`}
+          className={`flex-row items-start p-4 mb-4 rounded-lg border ${selected.includes(item.key)
+            ? "border-primary bg-primary/10"
+            : "border-gray-300"
+            }`}
         >
-     <Image
-  source={getIconSource(item.icon)}
-  style={{
-    width: 24,
-    height: 24,
-    marginRight: 12,
-    tintColor: selected.includes(item.key) ? undefined : '#888',
-  }}
-  resizeMode="contain"
-/>
+          <Image
+            source={getIconSource(item.icon)}
+            style={{
+              width: 24,
+              height: 24,
+              marginRight: 12,
+              tintColor: selected.includes(item.key) ? undefined : '#888',
+            }}
+            resizeMode="contain"
+          />
 
           <View className="flex-1">
             <Text className="font-semibold text-base mb-1">{item.title}</Text>
@@ -211,11 +210,10 @@ export default function ManageNotificationScreen() {
       <TouchableOpacity
         disabled={selected.length === 0}
         onPress={saveReminders}
-        className={`p-4 rounded-lg ${
-          selected.length === 0
-            ? "bg-gray-300 opacity-50"
-            : "bg-primary"
-        }`}
+        className={`p-4 rounded-lg ${selected.length === 0
+          ? "bg-gray-300 opacity-50"
+          : "bg-primary"
+          }`}
       >
         <Text className="text-white text-center font-semibold">
           Select at least one reminder
