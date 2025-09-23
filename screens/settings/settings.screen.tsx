@@ -1,10 +1,11 @@
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, Switch } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, Switch, ActionSheetIOS } from 'react-native';
 import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome6, Fontisto, Ionicons, Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { logout } from '@/lib/auth/authSlice';
 
-const SettingScreen = () => {
+const SettingsScreen = () => {
   const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(false);
 
   const handleGoBack = () => {
@@ -14,23 +15,27 @@ const SettingScreen = () => {
   const toggleFaceIdSwitch = () => setIsFaceIdEnabled(previousState => !previousState);
 
   const handleNavigation = () => {
-    router.push('/(routes)/emergency-contact');
+    router.push('/(routes)/add-emergency/index');     
   };
+  const handleLogout = () => {
+    logout();
+    router.push('/(routes)/auth/login');
+  }
 
   const menuItems = [
     { id: 'myAccount', title: 'My Account', subtitle: 'Make changes to your account', icon: <AntDesign name="user" size={30} color="black" />, alert: true },
     { id: 'emergencyContact', title: 'Emergency Contact', subtitle: 'Add an Emergency Contact', icon: <Ionicons name="person-circle-outline" size={38} color="black" />, action: () => handleNavigation() },
     { id: 'faceId', title: 'Face ID / Touch ID', subtitle: 'Manage your device security', icon: <Fontisto name="locked" size={24} color="black" />, toggle: true },
     { id: 'twoFactor', title: 'Two-Factor Authentication', subtitle: 'Further secure your account for safety', icon: <Feather name="shield" size={26} color="black" /> },
-    { id: 'logOut', title: 'Log out', subtitle: 'Further secure your account for safety', icon: <AntDesign name="logout" size={26} color="black" /> },
+    { id: 'logOut', title: 'Log out', subtitle: 'Further secure your account for safety', icon: <AntDesign name="logout" size={26} color="black" />, action: () => handleLogout() },
   ];
 
   const moreItems = [
     { id: 'help', title: 'Help & Support', icon: <Feather name="bell" size={26} color="black" /> },
-    { id: 'about', title: 'About App', icon: <AntDesign name="hearto" size={26} color="black" /> },
+    { id: 'about', title: 'About App', icon: <Feather name="heart" size={26} color="black" /> },
   ];
 
-  const renderMenuItem = (item) => (
+  const renderMenuItem = (item:MenuItemProps) => (
     <TouchableOpacity key={item.id} style={styles.menuItem} onPress={item.action}>
       <View style={styles.menuItemContent}>
         <View style={styles.menuIconContainer}>
@@ -75,9 +80,9 @@ const SettingScreen = () => {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.inner}>
-            <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+            {/* <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
               <AntDesign name="leftcircleo" size={30} color="black" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Text style={styles.header}>Settings</Text>
             <View style={styles.userProfile}>
               <View style={styles.profileWrapper}>
@@ -120,7 +125,7 @@ const SettingScreen = () => {
   );
 };
 
-export default SettingScreen;
+export default SettingsScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -139,7 +144,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   header: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: '600',
     marginBottom: 10,
   },
@@ -166,12 +171,12 @@ const styles = StyleSheet.create({
   },
   profileName: {
     color: 'white',
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   profileHandle: {
     color: '#D3D3D3',
-    fontSize: 16,
+    fontSize: 10,
   },
   menuList: {
     marginTop: 20,
@@ -212,7 +217,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   menuTitle: {
-    fontSize: 17,
+    fontSize: 12,
     fontWeight: '500',
   },
   menuSubtitle: {
@@ -228,7 +233,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   moreHeader: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: '600',
     marginTop: 20,
     marginBottom: -10,

@@ -1,3 +1,11 @@
-import SettingScreen  from"@/screens/settings/settingscreen";
+import SettingsScreen from "@/screens/settings/settings.screen";
 
-export default SettingScreen;
+const Settings = () => {
+  return (
+    <>
+      <SettingsScreen />
+    </>
+  );
+};
+
+export default Settings;

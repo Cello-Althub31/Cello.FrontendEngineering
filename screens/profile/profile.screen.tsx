@@ -19,6 +19,17 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker'
 import { router } from 'expo-router';
+import profileApi from '@/lib/api/profile';
+
+interface StatusModalProps {
+  visible: boolean;
+  onClose: () => void;
+  type: string;
+  title: string;
+  message: string;
+  onPrimaryButtonPress?: () => void;
+  primaryButtonText?: string;
+}
 
 const StatusModal = ({
   visible,
@@ -28,7 +39,7 @@ const StatusModal = ({
   message,
   onPrimaryButtonPress,
   primaryButtonText = "OK"
-}) => {
+}:StatusModalProps) => {
   const isSuccess = type === 'success';
   const iconName = isSuccess ? 'checkcircle' : 'warning-outline';
   const iconColor = 'white';
@@ -51,7 +62,7 @@ const StatusModal = ({
       >
         <View style={modalStyles.modalView}>
           <View style={modalStyles.iconBackground}>
-            <AntDesign name="checkcircle" size={80} color={iconColor} style={modalStyles.icon} />
+            <AntDesign name="check-circle" size={80} color={iconColor} style={modalStyles.icon} />
           </View>
           <Text style={modalStyles.modalTitle}>{title}</Text>
           <Text style={modalStyles.modalText}>{message}</Text>
@@ -77,7 +88,7 @@ const ProfileScreen = () => {
   const [gender, setGender] = useState("")
   const [genotypeDropdownVisible, setGenotypeDropdownVisible] = useState(false)
   const [genotype, setGenotype] = useState("")
-  const [profileImage, setProfileImage] = useState(null)
+  const [profileImage, setProfileImage] = useState<string|null>(null)
 
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [modalType, setModalType] = useState('success');
@@ -108,25 +119,39 @@ const ProfileScreen = () => {
     }
   };
 
-  const handleSubmit = () => {
-    if (!fullName || !dateOfBirth || !gender || !genotype || !diagnosis || !profileImage) {
-      // setModalType('error');
-      // setModalTitle('Validation Error');
-      // setStatusModalVisible(true);
-      // setModalMessage("Please fill out all the required fields and select a profile image.");
-      alert("Please fill out all the required fields and select a profile image.");
+  const handleSubmit = async() => {
+    if (!fullName || !dateOfBirth || !gender || !genotype || !diagnosis) {
+      
+      alert("Please fill out all the required fields.");
       return;
     }
+    try {
+      const response = await profileApi.createProfile({
+        fullName,
+        dateOfBirth,
+        gender, 
+        diagnosis,
+        genotype,
+      });
 
-    setModalType('success');
-    setModalTitle('Successful');
-    setModalMessage('Your Profile has been set up successfully');
-    setStatusModalVisible(true);
+      console.log(
+        "Profile created successfully: Your Profile has been set up successfully",
+        response.data
+      );
+       setModalType("success");
+       setModalTitle("Successful");
+       setModalMessage("Your Profile has been set up successfully");
+       setStatusModalVisible(true);
+    } catch (error) {
+      console.log("error creating profile: ",error)
+    }
+
+   
   };
 
   const handleSuccessModalPress = () => {
     setStatusModalVisible(false);
-    router.push("/(routes)/emergency-contact");
+    router.push("/(drawer)/home");
   }
 
   const handleGoBack = () => {
@@ -149,9 +174,9 @@ const ProfileScreen = () => {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.inner}>
-            <TouchableOpacity onPress={handleGoBack}>
+            {/* <TouchableOpacity onPress={handleGoBack}>
               <AntDesign name="leftcircleo" size={30} color="black" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Text style={styles.header}>Update your profile</Text>
             <Text style={styles.subHeader}></Text>
 
@@ -182,8 +207,8 @@ const ProfileScreen = () => {
               </View>
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Date of Birth</Text>
-                <TextInput
-                  placeholder="Enter your date of birth"
+                <TextInput className='text-black'
+                  placeholder="year-month-date"
                   style={styles.input}
                   value={dateOfBirth}
                   onChangeText={setDateOfBirth}
@@ -461,7 +486,7 @@ const modalStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   textStyle: {
-    color: "white",
+    color: "black",
     fontSize: 16,
     fontWeight: "400",
     textAlign: "center"

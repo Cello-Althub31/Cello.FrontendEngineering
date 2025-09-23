@@ -8,7 +8,7 @@ export default function DrawerLayout() {
     <Drawer
       screenOptions={{
         headerShown: true,
-        drawerActiveTintColor: "#2563eb",
+        drawerActiveTintColor: "#000",
         drawerLabelStyle: { fontSize: 16 },
         headerRight: () => (
           <View style={{ flexDirection: "row", gap: 16, marginRight: 12 }}>
@@ -73,7 +73,7 @@ export default function DrawerLayout() {
 <Drawer.Screen
   name="settings/index"
   options={{
-    title: "Settings",
+    title: "",
     drawerIcon: ({ color, size }) => (
       <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
         <Ionicons name="settings-outline" size={size} color={color} />

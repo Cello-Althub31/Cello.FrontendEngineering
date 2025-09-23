@@ -14,7 +14,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import { router } from 'expo-router';
 
-const getInitials = (name) => {
+const getInitials = (name:string) => {
     if (!name) return '';
     const parts = name.split(' ');
     if (parts.length === 1) {
@@ -47,7 +47,7 @@ const EmergencyContactScreen = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [addContactModalVisible, setAddContactModalVisible] = useState(false);
 
-    const handleSearch = (text) => {
+    const handleSearch = (text:string) => {
         setSearchTerm(text);
         const term = text.toLowerCase();
         if (term === '') {
@@ -62,7 +62,7 @@ const EmergencyContactScreen = () => {
     };
 
     const handleAddContact = () => {
-        router.push("/(routes)/add-emergency");
+        // router.push("/(routes)/add-emergency");
     };
 
     const handleGoBack = () => {
