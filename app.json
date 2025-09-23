@@ -42,7 +42,8 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-calendar"
+      "expo-calendar",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,3 +1,4 @@
+import { StyleSheet, Text, View } from 'react-native'
 import MedicationReminderScreen from "@/screens/medication-reminder/medication-reminder.screen";
 
 const MedicationReminder = () => {
@@ -9,3 +10,5 @@ const MedicationReminder = () => {
 };
 
 export default MedicationReminder;
+
+const styles = StyleSheet.create({})
