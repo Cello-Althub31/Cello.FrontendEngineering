@@ -62,15 +62,9 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView
-      style={{ paddingTop: insets.top }}
       className="flex-1 bg-white"
     >
-      <TopAppBar
-        onMenu={() => console.log("Menu pressed")}
-        onNotifications={() => console.log("Notifications")}
-        onCall={() => console.log("Call")}
-        unreadCount={0}
-      />
+      
 
       {/* Title + Month */}
       <View className="px-4 mt-6">

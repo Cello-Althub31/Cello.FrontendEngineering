@@ -15,7 +15,7 @@ const SettingsScreen = () => {
   const toggleFaceIdSwitch = () => setIsFaceIdEnabled(previousState => !previousState);
 
   const handleNavigation = () => {
-    router.push('/(routes)/add-emergency/index');     
+    router.push('/(routes)/add-emergency');     
   };
   const handleLogout = () => {
     logout();
