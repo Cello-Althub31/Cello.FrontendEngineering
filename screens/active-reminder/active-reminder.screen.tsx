@@ -24,7 +24,7 @@ const ActiveScreen = () => {
             <ScrollView contentContainerStyle={styles.scrollContent}>
                <View style={styles.inner}>
                   <TouchableOpacity onPress={handleGoBack}>
-                     <AntDesign name="leftcircleo" size={30} color="black" />
+                     <AntDesign name="left-circle" size={30} color="black" />
                   </TouchableOpacity>
                   <Text style={styles.headerText}>Active Reminders</Text>
                   <Text style={styles.subHeader}>
@@ -42,7 +42,7 @@ const ActiveScreen = () => {
 
                         <View style={styles.content}>
                            <View style={styles.contentTop}>
-                              <AntDesign name="checkcircleo" size={24} color="black" />
+                              <AntDesign name="check-circle" size={24} color="black" />
                               <Text style={styles.doseText}>Take your Dose</Text>
                               <View style={styles.actionButtons}>
                                  <TouchableOpacity style={[styles.button, styles.addButton]}>
@@ -76,7 +76,7 @@ const ActiveScreen = () => {
 
                         <View style={styles.content}>
                            <View style={styles.contentTop}>
-                              <AntDesign name="checkcircleo" size={24} color="black" />
+                              <AntDesign name="check-circle" size={24} color="black" />
                               <Text style={styles.doseText}>Take your Dose</Text>
                               <View style={styles.actionButtons}>
                                  <TouchableOpacity style={[styles.button, styles.addButton]}>
@@ -110,7 +110,7 @@ const ActiveScreen = () => {
 
                         <View style={styles.content}>
                            <View style={styles.contentTop}>
-                              <AntDesign name="checkcircleo" size={24} color="black" />
+                              <AntDesign name="check-circle" size={24} color="black" />
                               <Text style={styles.doseText}>Take your Dose</Text>
                               <View style={styles.actionButtons}>
                                  <TouchableOpacity style={[styles.button, styles.addButton]}>
@@ -144,7 +144,7 @@ const ActiveScreen = () => {
 
                         <View style={styles.content}>
                            <View style={styles.contentTop}>
-                              <AntDesign name="checkcircleo" size={24} color="black" />
+                              <AntDesign name="check-circle" size={24} color="black" />
                               <Text style={styles.doseText}>Take your Dose</Text>
                               <View style={styles.actionButtons}>
                                  <TouchableOpacity style={[styles.button, styles.addButton]}>

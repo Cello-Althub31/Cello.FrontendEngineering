@@ -14,7 +14,7 @@ export default function VerifyScreen() {
   const router = useRouter();
   const intervalRef = useRef<number | null>(null);
   const inputRef = useRef<TextInput[]>([]);
-  const [OTP, setOTP] = useState<string[]>(["", "", "", ""]);
+  const [OTP, setOTP] = useState<string[]>(["", "", "", "", "", ""]);
   const [countSeconds, setCountSeconds] = useState(120);
 
   const handleTextChange = (text: string, index: number) => {
@@ -23,7 +23,7 @@ export default function VerifyScreen() {
     setOTP(updated);
 
     // Focus next
-    if (text && index < 3) {
+    if (text && index < 5) {
       inputRef.current[index + 1]?.focus();
     }
 
@@ -41,14 +41,14 @@ export default function VerifyScreen() {
   };
 
   const onComplete = (pin: string) => {
-    const VALID_OTP = "1234";
+    const VALID_OTP = "123456";
 
     if (pin === VALID_OTP) {
       if (route?.toString() === "forgot-password") {
-        router.push("/(routes)/auth/reset-password");
+        router.push("/auth/reset-password");
       } else {
         router.push({
-          pathname: "/(routes)/success",
+          pathname: "/success",
           params: {
             route: "register",
             title: "Account Created",
@@ -98,9 +98,9 @@ export default function VerifyScreen() {
 
   const handleChangeEmail = () => {
     if (route?.toString() === "register") {
-      router.push("/(routes)/auth/register");
+      router.push("/auth/register");
     } else {
-      router.push("/(routes)/auth/forgot-password");
+      router.push("/auth/forgot-password");
     }
   };
 

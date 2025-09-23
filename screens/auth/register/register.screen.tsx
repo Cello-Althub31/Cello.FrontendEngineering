@@ -57,7 +57,7 @@ export default function RegisterScreen() {
 
       if (signup.fulfilled.match(resultAction)) {
         router.push({
-          pathname: "/(routes)/auth/verify",
+          pathname: "/auth/verify",
           params: { route: "register" },
         });
       } else {
@@ -196,7 +196,7 @@ export default function RegisterScreen() {
             Already have an account?{" "}
             <Text
               className="text-black font-semibold"
-              onPress={() => router.push("/(routes)/auth/login")}
+              onPress={() => router.push("/auth/login")}
             >
               Log in
             </Text>

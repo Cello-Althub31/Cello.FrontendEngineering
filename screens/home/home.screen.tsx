@@ -1,42 +1,62 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   View,
   Text,
   Pressable,
   FlatList,
   Image,
+  Alert,
 } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import TopAppBar from "@/components/shared/TopAppBar";
 import Button from "@/components/ui/Button";
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-function startOfWeek(d: Date) {
-  const date = new Date(d);
-  const day = (date.getDay() + 6) % 7; // Monday-first
-  date.setHours(0, 0, 0, 0);
-  return new Date(date.getTime() - day * DAY_MS);
-}
-
-function formatDayLabel(date: Date) {
-  return date.toLocaleDateString(undefined, { weekday: "short" }).toUpperCase();
-}
-
-function formatMonth(date: Date) {
-  return date.toLocaleDateString(undefined, { month: "long" });
-}
+import { secureStorage } from "@/lib/utils/secureStorage";
+import profileApi from "@/lib/api/profile";
+import axios from "axios";
 
 export default function HomeScreen() {
-  const insets = useSafeAreaInsets();
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const DAY_MS = 24 * 60 * 60 * 1000;
+
+  function startOfWeek(d: Date) {
+    const date = new Date(d);
+    const day = (date.getDay() + 6) % 7; // Monday-first
+    date.setHours(0, 0, 0, 0);
+    return new Date(date.getTime() - day * DAY_MS);
+  }
+
+  function formatDayLabel(date: Date) {
+    return date.toLocaleDateString(undefined, { weekday: "short" }).toUpperCase();
+  }
+
+  function formatMonth(date: Date) {
+    return date.toLocaleDateString(undefined, { month: "long" });
+  }
   const monthName = formatMonth(selectedDate);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await profileApi.getById("68c08d75b24587239f718f9c");
+        console.log("User profile data:", response.data);
+      } catch (error: any) {
+        if (axios.isAxiosError(error) && error.response) {
+          const apiMessage = error.response.data?.message || "Something went wrong";
+          Alert.alert("Error", apiMessage);
+        } else {
+          Alert.alert("Error", "Unexpected error occurred");
+        }
+      }
+    };
+
+    getUser();
+  }, []);
 
   const handleCreateMedication = async () => {
     router.push({
-      pathname: "/(drawer)/medication-reminder",
+      pathname: "/medication-reminder",
       params: { route: "create-medication" },
     });
   };
@@ -61,19 +81,9 @@ export default function HomeScreen() {
     a.getDate() === b.getDate();
 
   return (
-    <SafeAreaView
-      style={{ paddingTop: insets.top }}
-      className="flex-1 bg-white"
-    >
-      <TopAppBar
-        onMenu={() => console.log("Menu pressed")}
-        onNotifications={() => console.log("Notifications")}
-        onCall={() => console.log("Call")}
-        unreadCount={0}
-      />
-
+    <SafeAreaView className="flex-1 bg-white">
       {/* Title + Month */}
-      <View className="px-4 mt-6">
+      <View className="px-4">
         <Text className="text-xl font-poppins text-bold text-black">
           Manage Medication
         </Text>

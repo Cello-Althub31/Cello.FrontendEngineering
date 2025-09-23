@@ -5,8 +5,8 @@ export default function Index() {
   const user = useAppSelector((state) => state.auth.user);
 
   if (user) {
-    return <Redirect href="/(drawer)/home" />;
+    return <Redirect href="/home" />;
   }
-  
-  return <Redirect href="/(routes)/welcome" />;
+
+  return <Redirect href="/welcome" />;
 }

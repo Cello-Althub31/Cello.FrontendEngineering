@@ -60,7 +60,7 @@ const MedicationReminderScreen = () => {
   };
 
   const handleNext = () => {
-    router.push("/(drawer)/home");
+    router.push("/home");
   };
   const handleScreen = () => {
     router.push("/doctors-appointment");
@@ -82,7 +82,7 @@ const MedicationReminderScreen = () => {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.inner}>
             <TouchableOpacity onPress={handleGoBack}>
-              <AntDesign name="leftcircleo" size={30} color="black" />
+              <AntDesign name="left-circle" size={30} color="black" />
             </TouchableOpacity>
             <Text style={styles.headerText}>Medication Reminder</Text>
             <Text style={styles.subHeader}>
@@ -274,12 +274,12 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   formSection: {
-    marginBottom: 20 
-   },
-  label: { 
-   fontSize: 16,
-   marginBottom: 8,
-   color: "black",
+    marginBottom: 20
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: "black",
     fontWeight: "300",
   },
   input: {

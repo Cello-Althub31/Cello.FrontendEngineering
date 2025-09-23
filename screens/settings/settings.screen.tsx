@@ -15,11 +15,11 @@ const SettingsScreen = () => {
   const toggleFaceIdSwitch = () => setIsFaceIdEnabled(previousState => !previousState);
 
   const handleNavigation = () => {
-    router.push('/(routes)/add-emergency/index');     
+    router.push('/add-emergency');
   };
   const handleLogout = () => {
     logout();
-    router.push('/(routes)/auth/login');
+    router.push('/auth/login');
   }
 
   const menuItems = [
@@ -35,7 +35,7 @@ const SettingsScreen = () => {
     { id: 'about', title: 'About App', icon: <Feather name="heart" size={26} color="black" /> },
   ];
 
-  const renderMenuItem = (item:MenuItemProps) => (
+  const renderMenuItem = (item: MenuItemProps) => (
     <TouchableOpacity key={item.id} style={styles.menuItem} onPress={item.action}>
       <View style={styles.menuItemContent}>
         <View style={styles.menuIconContainer}>
@@ -80,9 +80,6 @@ const SettingsScreen = () => {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.inner}>
-            {/* <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-              <AntDesign name="leftcircleo" size={30} color="black" />
-            </TouchableOpacity> */}
             <Text style={styles.header}>Settings</Text>
             <View style={styles.userProfile}>
               <View style={styles.profileWrapper}>

@@ -82,7 +82,7 @@ export default function ResetPasswordScreen() {
               title="Save"
               onPress={() =>
                 router.push({
-                  pathname: "/(routes)/success",
+                  pathname: "/success",
                   params: {
                     route: "forgot-password",
                     title: "Password Changed",

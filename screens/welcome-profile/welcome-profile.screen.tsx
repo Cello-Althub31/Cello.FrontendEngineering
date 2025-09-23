@@ -38,7 +38,7 @@ export default function WelcomeProfileScreen() {
             title="Continue"
             className="bg-white rounded-full py-4 px-8"
             textClassName="text-black text-lg font-semibold"
-            onPress={() => router.push("/(routes)/profile")}
+            onPress={() => router.push("/profile")}
           />
         </View>
       </SafeAreaView>

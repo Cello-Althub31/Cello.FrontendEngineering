@@ -10,7 +10,7 @@ const HydrationScreen = () => {
       router.back();
    };
    const handleNext = () => {
-      router.push("/(drawer)/home");
+      router.push("/home");
    };
    const handleScreen = () => {
       router.push("/active-reminder");
@@ -55,14 +55,14 @@ const HydrationScreen = () => {
             <ScrollView contentContainerStyle={styles.scrollContent}>
                <View style={styles.inner}>
                   <TouchableOpacity onPress={handleGoBack}>
-                     <AntDesign name="leftcircleo" size={30} color="black" />
+                     <AntDesign name="left-circle" size={30} color="black" />
                   </TouchableOpacity>
                   <Text style={styles.headerText}>Hydration Reminders</Text>
                   <Text style={styles.subHeader}>
                      Keep your body refreshed—let Cello help you stay hydrated.
                   </Text>
-                    <View style={styles.formContainer}>
-                      <View style={styles.formSection}>
+                  <View style={styles.formContainer}>
+                     <View style={styles.formSection}>
                         <Text style={styles.label}>Remind me at</Text>
                         <TouchableOpacity onPress={() => setShowTimePicker(true)}>
                            <TextInput
@@ -81,59 +81,59 @@ const HydrationScreen = () => {
                               onChange={handleTimeChange}
                            />
                         )}
-                      </View>
+                     </View>
 
                      <View style={styles.formSection}>
                         <Text style={styles.label}>Frequency</Text>
                         <TouchableOpacity
-                          style={styles.dropdown}
-                          onPress={() => setShowFrequencyModal(true)}
-                          activeOpacity={0.7}
+                           style={styles.dropdown}
+                           onPress={() => setShowFrequencyModal(true)}
+                           activeOpacity={0.7}
                         >
-                          <Text style={styles.dropdownText}>{selectedFrequency}</Text>
-                          <Ionicons name="chevron-down" size={20} color="#888" />
+                           <Text style={styles.dropdownText}>{selectedFrequency}</Text>
+                           <Ionicons name="chevron-down" size={20} color="#888" />
                         </TouchableOpacity>
                         <Modal
-                          visible={showFrequencyModal}
-                          transparent
-                          animationType="slide"
-                          onRequestClose={() => setShowFrequencyModal(false)}
+                           visible={showFrequencyModal}
+                           transparent
+                           animationType="slide"
+                           onRequestClose={() => setShowFrequencyModal(false)}
                         >
-                          <View style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: 'rgba(0,0,0,0.3)'
-                          }}>
-                            <View style={{
-                              backgroundColor: '#fff',
-                              borderRadius: 10,
-                              padding: 20,
-                              width: '80%',
-                            }}>
-                              <FlatList
-                                data={frequencyOptions}
-                                keyExtractor={(item) => item}
-                                renderItem={({ item }) => (
-                                  <TouchableOpacity
-                                    style={{ paddingVertical: 15 }}
-                                    onPress={() => {
-                                      setSelectedFrequency(item);
-                                      setShowFrequencyModal(false);
-                                    }}
-                                  >
-                                    <Text style={{ fontSize: 16 }}>{item}</Text>
-                                  </TouchableOpacity>
-                                )}
-                              />
-                              <TouchableOpacity
-                                style={{ marginTop: 10, alignSelf: 'flex-end' }}
-                                onPress={() => setShowFrequencyModal(false)}
-                              >
-                                <Text style={{ color: '#E64646', fontWeight: 'bold' }}>Cancel</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
+                           <View style={{
+                              flex: 1,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              backgroundColor: 'rgba(0,0,0,0.3)'
+                           }}>
+                              <View style={{
+                                 backgroundColor: '#fff',
+                                 borderRadius: 10,
+                                 padding: 20,
+                                 width: '80%',
+                              }}>
+                                 <FlatList
+                                    data={frequencyOptions}
+                                    keyExtractor={(item) => item}
+                                    renderItem={({ item }) => (
+                                       <TouchableOpacity
+                                          style={{ paddingVertical: 15 }}
+                                          onPress={() => {
+                                             setSelectedFrequency(item);
+                                             setShowFrequencyModal(false);
+                                          }}
+                                       >
+                                          <Text style={{ fontSize: 16 }}>{item}</Text>
+                                       </TouchableOpacity>
+                                    )}
+                                 />
+                                 <TouchableOpacity
+                                    style={{ marginTop: 10, alignSelf: 'flex-end' }}
+                                    onPress={() => setShowFrequencyModal(false)}
+                                 >
+                                    <Text style={{ color: '#E64646', fontWeight: 'bold' }}>Cancel</Text>
+                                 </TouchableOpacity>
+                              </View>
+                           </View>
                         </Modal>
                      </View>
                   </View>

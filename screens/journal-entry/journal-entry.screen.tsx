@@ -48,7 +48,7 @@ const JournalEntryScreen = () => {
       const entries = existing ? JSON.parse(existing) : [];
       entries.push(entry);
       await AsyncStorage.setItem("journalEntries", JSON.stringify(entries));
-      router.push("/journal-dashboard");
+      // router.push("/journal-dashboard");
     } catch (error) {
       console.error("Error saving entry:", error);
     }
@@ -62,7 +62,7 @@ const JournalEntryScreen = () => {
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <AntDesign name="leftcircleo" size={28} color="#333" />
+          <AntDesign name="left-circle" size={28} color="#333" />
         </TouchableOpacity>
 
         <Text style={styles.title}>Today's Journal</Text>
@@ -147,45 +147,45 @@ export default JournalEntryScreen;
 
 const styles = StyleSheet.create({
   container: {
-     flex: 1,
-     backgroundColor: "#fff"
-     },
-  scrollContent: { 
-    padding: 24 
-},
+    flex: 1,
+    backgroundColor: "#fff"
+  },
+  scrollContent: {
+    padding: 24
+  },
   backButton: {
-     alignSelf: "flex-start", 
-     marginBottom: 10 
+    alignSelf: "flex-start",
+    marginBottom: 10
   },
   title: {
-     fontSize: 22, 
-     fontWeight: "600", 
-     textAlign: "center", 
-     marginBottom: 10, 
-     color: "#333"
-     },
-  subHeader: { 
-     fontSize: 16, 
-     textAlign: "center", 
-     marginBottom: 20, 
-     color: "#666" 
+    fontSize: 22,
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: 10,
+    color: "#333"
   },
-  moodRow: { 
-     flexDirection: "row", 
-     justifyContent: "space-around", 
-     marginBottom: 30 
+  subHeader: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 20,
+    color: "#666"
   },
-  moodIcon: { 
-     padding: 10, 
-     borderRadius: 10, 
-     backgroundColor: "#f2f2f2" 
+  moodRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 30
   },
-  selectedMood: { 
-     backgroundColor: "#C86969" 
+  moodIcon: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: "#f2f2f2"
   },
-  moodText: { 
-     fontSize: 28, 
-     textAlign: "center" 
+  selectedMood: {
+    backgroundColor: "#C86969"
+  },
+  moodText: {
+    fontSize: 28,
+    textAlign: "center"
   },
   input: {
     borderWidth: 1,
@@ -196,20 +196,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   description: {
-     height: 120, 
-     textAlignVertical: "top"
-     },
+    height: 120,
+    textAlignVertical: "top"
+  },
   formContainer: {
-     marginBottom: 20
-     },
+    marginBottom: 20
+  },
   formSection: {
-     marginBottom: 20 
-    },
+    marginBottom: 20
+  },
   label: {
-     fontSize: 16,
-     marginBottom: 8,
-     color: "#333"
-   },
+    fontSize: 16,
+    marginBottom: 8,
+    color: "#333"
+  },
   dropdownText: {
     fontSize: 16,
     paddingVertical: 12,
