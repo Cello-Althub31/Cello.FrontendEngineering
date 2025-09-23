@@ -14,7 +14,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import { router } from 'expo-router';
 
-const getInitials = (name:string) => {
+const getInitials = (name: string) => {
     if (!name) return '';
     const parts = name.split(' ');
     if (parts.length === 1) {
@@ -47,7 +47,7 @@ const EmergencyContactScreen = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [addContactModalVisible, setAddContactModalVisible] = useState(false);
 
-    const handleSearch = (text:string) => {
+    const handleSearch = (text: string) => {
         setSearchTerm(text);
         const term = text.toLowerCase();
         if (term === '') {
@@ -62,7 +62,7 @@ const EmergencyContactScreen = () => {
     };
 
     const handleAddContact = () => {
-        // router.push("/(routes)/add-emergency");
+        // router.push("/add-emergency");
     };
 
     const handleGoBack = () => {
@@ -82,7 +82,7 @@ const EmergencyContactScreen = () => {
                 <View style={styles.inner}>
                     <View style={styles.headerContainer}>
                         <TouchableOpacity onPress={handleGoBack}>
-                            <AntDesign name="leftcircleo" size={30} color="black" />
+                            <AntDesign name="left-circle" size={30} color="black" />
                         </TouchableOpacity>
                         <Text style={styles.headerText}>Emergency Contacts</Text>
                     </View>

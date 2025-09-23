@@ -24,14 +24,14 @@ export default function GetStartedScreen() {
             title="Sign up"
             className="w-full bg-white"
             textClassName="text-black"
-            onPress={() => router.push("/(routes)/auth/register")}
+            onPress={() => router.push("/auth/register")}
           />
           <Button
             title="Log in"
             variant="outline"
             className="w-full border-white"
             textClassName="text-white"
-            onPress={() => router.push("/(routes)/auth/login")}
+            onPress={() => router.push("/auth/login")}
           />
         </View>
 

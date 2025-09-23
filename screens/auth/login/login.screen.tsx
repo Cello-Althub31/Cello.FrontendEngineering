@@ -47,7 +47,7 @@ export default function LoginScreen() {
       const resultAction = await dispatch(login(formData));
 
       if (login.fulfilled.match(resultAction)) {
-        router.push("/(drawer)/home");
+        router.push("/home");
       } else {
         alert(resultAction.payload || "Login failed");
       }
@@ -146,7 +146,7 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
           <Pressable
-            onPress={() => router.push("/(routes)/auth/forgot-password")}
+            onPress={() => router.push("/auth/forgot-password")}
           >
             <Text className="text-grey font-poppins text-sm text-right">
               Forget Password?
@@ -164,7 +164,7 @@ export default function LoginScreen() {
             Don't have an account?{" "}
             <Text
               className="text-black font-semibold"
-              onPress={() => router.push("/(routes)/auth/register")}
+              onPress={() => router.push("/auth/register")}
             >
               Sign up
             </Text>

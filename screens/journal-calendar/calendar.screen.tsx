@@ -12,8 +12,6 @@ import { Calendar, DateData } from "react-native-calendars";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
-import JournalCalendarScreen from "@/app/(routes)/journal-calendar";
-import JournalEntry from "@/app/(routes)/journal-entry";
 
 const JournalCalendar = () => {
   const [selectedDate, setSelectedDate] = useState("");
@@ -51,7 +49,7 @@ const JournalCalendar = () => {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.inner}>
             <TouchableOpacity onPress={handleGoBack}>
-              <AntDesign name="leftcircleo" size={30} color="black" />
+              <AntDesign name="left-circle" size={30} color="black" />
             </TouchableOpacity>
 
             <Text style={styles.headerText}>Journal Calendar</Text>
@@ -64,11 +62,11 @@ const JournalCalendar = () => {
               markedDates={
                 selectedDate
                   ? {
-                      [selectedDate]: {
-                        selected: true,
-                        selectedColor: "#00adf5",
-                      },
-                    }
+                    [selectedDate]: {
+                      selected: true,
+                      selectedColor: "#00adf5",
+                    },
+                  }
                   : {}
               }
               style={styles.calendar}
@@ -91,7 +89,7 @@ const JournalCalendar = () => {
   );
 };
 
-export default JournalCalendarScreen;
+export default JournalCalendar;
 
 const styles = StyleSheet.create({
   container: {

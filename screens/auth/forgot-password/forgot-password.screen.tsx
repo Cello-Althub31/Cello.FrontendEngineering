@@ -13,7 +13,7 @@ export default function ForgotPasswordScreen() {
 
   const handleForgotPassword = async () => {
     router.push({
-      pathname: "/(routes)/auth/verify",
+      pathname: "/auth/verify",
       params: { route: "forgot-password" },
     });
   };

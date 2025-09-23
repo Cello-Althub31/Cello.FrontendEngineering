@@ -15,14 +15,11 @@ export const secureStorage = {
   async clearTokens() {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
   },
-  async storeUser(user: any) {
-    await SecureStore.setItemAsync(USER_KEY, JSON.stringify(user));
-  },
   async getUser() {
-    const json = await SecureStore.getItemAsync(USER_KEY);
+    const json = await SecureStore.getItemAsync(TOKEN_KEY);
     return json ? JSON.parse(json) : null;
   },
   async clearUser() {
-    await SecureStore.deleteItemAsync(USER_KEY);
+    await SecureStore.deleteItemAsync(TOKEN_KEY);
   },
 };

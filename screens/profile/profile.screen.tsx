@@ -11,6 +11,7 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
+  Button,
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import AntDesign from '@expo/vector-icons/AntDesign'
@@ -20,6 +21,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker'
 import { router } from 'expo-router';
 import profileApi from '@/lib/api/profile';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface StatusModalProps {
   visible: boolean;
@@ -39,9 +41,9 @@ const StatusModal = ({
   message,
   onPrimaryButtonPress,
   primaryButtonText = "OK"
-}:StatusModalProps) => {
+}: StatusModalProps) => {
   const isSuccess = type === 'success';
-  const iconName = isSuccess ? 'checkcircle' : 'warning-outline';
+  const iconName = isSuccess ? 'check-circle' : 'warning-outline';
   const iconColor = 'white';
   const titleColor = 'black';
   const buttonColor = '#B22222';
@@ -82,13 +84,14 @@ const StatusModal = ({
 
 const ProfileScreen = () => {
   const [fullName, setFullName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [showDateOfBirthPicker, setShowDateOfBirthPicker] = useState(false);
   const [diagnosis, setDiagnosis] = useState("");
   const [genderDropdownVisible, setGenderDropdownVisible] = useState(false)
   const [gender, setGender] = useState("")
   const [genotypeDropdownVisible, setGenotypeDropdownVisible] = useState(false)
   const [genotype, setGenotype] = useState("")
-  const [profileImage, setProfileImage] = useState<string|null>(null)
+  const [profileImage, setProfileImage] = useState<string | null>(null)
 
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [modalType, setModalType] = useState('success');
@@ -97,6 +100,24 @@ const ProfileScreen = () => {
 
   const genders = ['Male', 'Female', 'Other']
   const genotypes = ['AA', 'AS', 'SS', 'AC']
+
+  interface OnChangeDateOfBirthEvent {
+    type: string;
+    nativeEvent: any;
+  }
+
+  const onChangeDateOfBirth = (
+    event: OnChangeDateOfBirthEvent,
+    selectedDate: Date | undefined
+  ) => {
+    const currentDate: Date | undefined = selectedDate || dateOfBirth;
+    setShowDateOfBirthPicker(Platform.OS === 'ios');
+    setDateOfBirth(currentDate);
+  };
+
+  const showDatepicker = () => {
+    setShowDateOfBirthPicker(true);
+  };
 
   const handleEditProfileImage = async () => {
     try {
@@ -119,17 +140,18 @@ const ProfileScreen = () => {
     }
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     if (!fullName || !dateOfBirth || !gender || !genotype || !diagnosis) {
-      
+
       alert("Please fill out all the required fields.");
       return;
     }
+    console.log('Submitting profile with data:', { fullName, dateOfBirth, gender, genotype, diagnosis });
     try {
       const response = await profileApi.createProfile({
         fullName,
-        dateOfBirth,
-        gender, 
+        dateOfBirth: dateOfBirth.toISOString().split('T')[0],
+        gender,
         diagnosis,
         genotype,
       });
@@ -138,20 +160,20 @@ const ProfileScreen = () => {
         "Profile created successfully: Your Profile has been set up successfully",
         response.data
       );
-       setModalType("success");
-       setModalTitle("Successful");
-       setModalMessage("Your Profile has been set up successfully");
-       setStatusModalVisible(true);
+      setModalType("success");
+      setModalTitle("Successful");
+      setModalMessage("Your Profile has been set up successfully");
+      setStatusModalVisible(true);
     } catch (error) {
-      console.log("error creating profile: ",error)
+      console.log("error creating profile: ", error)
     }
 
-   
+
   };
 
   const handleSuccessModalPress = () => {
     setStatusModalVisible(false);
-    router.push("/(drawer)/home");
+    router.push("/home");
   }
 
   const handleGoBack = () => {
@@ -174,9 +196,6 @@ const ProfileScreen = () => {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.inner}>
-            {/* <TouchableOpacity onPress={handleGoBack}>
-              <AntDesign name="leftcircleo" size={30} color="black" />
-            </TouchableOpacity> */}
             <Text style={styles.header}>Update your profile</Text>
             <Text style={styles.subHeader}></Text>
 
@@ -205,14 +224,17 @@ const ProfileScreen = () => {
                   onChangeText={setFullName}
                 />
               </View>
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Date of Birth</Text>
-                <TextInput className='text-black'
-                  placeholder="year-month-date"
-                  style={styles.input}
-                  value={dateOfBirth}
-                  onChangeText={setDateOfBirth}
-                />
+              <View style={[styles.inputGroup, { alignItems: 'flex-start' }]}>
+                <Button onPress={showDatepicker} title='Date of Birth' color='black' />
+                {showDateOfBirthPicker && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={dateOfBirth}
+                    mode="date"
+                    display="default"
+                    onChange={onChangeDateOfBirth}
+                  />
+                )}
               </View>
 
               <View style={styles.inputGroup}>

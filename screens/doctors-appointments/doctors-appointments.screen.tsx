@@ -9,7 +9,7 @@ const AppointmentScreen = () => {
       router.back();
    };
    const handleNext = () => {
-      router.push("/(drawer)/home");
+      router.push("/home");
    }
    const handleScreen = () => {
       router.push("/hydration-reminder");
@@ -31,7 +31,7 @@ const AppointmentScreen = () => {
             <ScrollView contentContainerStyle={styles.scrollContent}>
                <View style={styles.inner}>
                   <TouchableOpacity onPress={handleGoBack}>
-                     <AntDesign name="leftcircleo" size={30} color="black" />
+                     <AntDesign name="left-circle" size={30} color="black" />
                   </TouchableOpacity>
                   <Text style={styles.headerText}>Doctor Appointment</Text>
                   <Text style={styles.subHeader}>

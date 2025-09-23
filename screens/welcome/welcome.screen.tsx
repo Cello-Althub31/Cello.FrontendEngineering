@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import GradientBackground from "@/components/shared/gradient-bg";
 import { FlatList, Image, NativeScrollEvent, NativeSyntheticEvent, Platform, Pressable, Text, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {slides} from "@/constants/data"
+import { slides } from "@/constants/data"
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
@@ -16,7 +16,7 @@ export default function WelcomeScreen() {
   const updateSlideIndex = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const newIndex = Math.floor(contentOffsetX / SCREEN_WIDTH);
-    setCurrentSlideIndex(newIndex); 
+    setCurrentSlideIndex(newIndex);
   }
 
   const nextSlide = () => {
@@ -26,7 +26,7 @@ export default function WelcomeScreen() {
       ref.current?.scrollToOffset({ offset, animated: true });
       setCurrentSlideIndex(nextSlideIndex);
     } else {
-      router.push("/(routes)/get-started");
+      router.push("/get-started");
     }
   }
 

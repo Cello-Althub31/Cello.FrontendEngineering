@@ -23,6 +23,7 @@ export const signup = createAsyncThunk(
   async (payload: SignUpRequest, { rejectWithValue }) => {
     try {
       const res = await authApi.signup(payload);
+      console.log("Response from API: ", res)
       return res.data;
     } catch (error: any) {
       console.error("console error:", error);
@@ -157,14 +158,12 @@ const authSlice = createSlice({
         state.error = null;
 
         secureStorage.storeTokens(action.payload.token);
-        secureStorage.storeUser(action.payload.user);
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.error = null;
-
+        console.log("Storing tokens and user in secure storage:", action.payload);
         secureStorage.storeTokens(action.payload.token);
-        secureStorage.storeUser(action.payload.user);
       })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
