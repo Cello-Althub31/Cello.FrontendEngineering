@@ -15,10 +15,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
 
-
 export default function ManageNotificationScreen() {
   const [selected, setSelected] = useState<string[]>([]);
   const navigation = useNavigation();
+
+  const handleMedication = () => {
+    
+    router.push("/medication-reminder");
+  };
+  const handleHydration = () => {
+  
+    router.push("/hydration-reminder");
+  };
+  const handleAppointments = () => {
+  
+    router.push("/doctors-appointment");
+  };
 
   const reminders = [
     {
@@ -26,32 +38,33 @@ export default function ManageNotificationScreen() {
       title: "Medication Reminder",
       description: "Never miss a dose—get gentle nudges at the right time.",
       icon: "pill",
+      action: () => handleMedication(),
     },
     {
       key: "hydration",
       title: "Hydration Reminders",
       description: "Keep your body refreshed—let Cello help you stay hydrated.",
       icon: "water-droplet",
+      action: () => handleHydration(),
     },
     {
       key: "appointments",
       title: "Doctor Appointments",
       description: "Get alerts before your appointments.",
       icon: "doctor",
+      action: () => handleAppointments(),
     },
   ];
   const getIconSource = (iconName: string) => {
     switch (iconName) {
-      case 'pill':
-        return require('@/assets/icons/pill.png');
-      case 'water-droplet':
-        return require('@/assets/icons/water-droplet.png');
-      case 'doctor':
-        return require('@/assets/icons/doctor.png');
-    };
+      case "pill":
+        return require("@/assets/icons/pill.png");
+      case "water-droplet":
+        return require("@/assets/icons/water-droplet.png");
+      case "doctor":
+        return require("@/assets/icons/doctor.png");
+    }
   };
-
-
 
   const toggleReminder = (type: string) => {
     setSelected((prev) =>
@@ -88,26 +101,25 @@ export default function ManageNotificationScreen() {
       content: {
         title: "Cello Reminder",
         body: body,
-
       },
       trigger: null,
     });
 
-    // Alternative trigger 
+    // Alternative trigger
 
     // For time-based trigger (5 seconds from now):
     // trigger: { seconds: 5 } as Notifications.TimeIntervalTriggerInput,
 
     // For daily trigger (specific time):
-    // trigger: { 
-    //   hour: 9, 
-    //   minute: 0, 
-    //   repeats: true 
+    // trigger: {
+    //   hour: 9,
+    //   minute: 0,
+    //   repeats: true
     // } as Notifications.DailyTriggerInput,
 
     // For date-based trigger:
-    // trigger: { 
-    //   date: new Date(Date.now() + 5 * 1000) 
+    // trigger: {
+    //   date: new Date(Date.now() + 5 * 1000)
     // } as Notifications.DateTriggerInput,
 
     // For weekly-based trigger:
@@ -130,7 +142,6 @@ export default function ManageNotificationScreen() {
 
       Alert.alert("Reminders Set", "Your notifications are scheduled.");
 
-
       router.push("/home");
     } catch (error) {
       Alert.alert("Error", "Failed to save reminders.");
@@ -138,7 +149,6 @@ export default function ManageNotificationScreen() {
   };
 
   const navigateToHome = () => {
-
     router.push("/home");
   };
 
@@ -146,9 +156,8 @@ export default function ManageNotificationScreen() {
     <ScrollView className="flex-1 bg-white p-5">
       <Text className="text-2xl font-bold mb-5">Wellbeing Calendar</Text>
       <View className="mb-6 flex-row items-center">
-
         <Image
-          source={require('@/assets/icons/megaphone.png')}
+          source={require("@/assets/icons/megaphone.png")}
           style={{ width: 24, height: 24, marginRight: 8 }}
           resizeMode="contain"
         />
@@ -162,11 +171,18 @@ export default function ManageNotificationScreen() {
       </View>
 
       <View className="bg-white p-4 rounded-lg mb-6">
-        <Text className="text-xl font-bold mb-1">
-          Recommended for you
-        </Text>
+        <Text className="text-xl font-bold mb-1">Recommended for you</Text>
         <Text className="text-zinc-900">Watch some tutorials</Text>
-        <Image source={require('@/assets/icons/videoplay.png')} style={{ width: 24, height: 24, marginRight: 8, position: 'absolute', right: 16, top: 16 }}
+        <Image
+          source={require("@/assets/icons/videoplay.png")}
+          style={{
+            width: 24,
+            height: 24,
+            marginRight: 8,
+            position: "absolute",
+            right: 16,
+            top: 16,
+          }}
           resizeMode="contain"
         />
       </View>
@@ -174,11 +190,15 @@ export default function ManageNotificationScreen() {
       {reminders.map((item) => (
         <TouchableOpacity
           key={item.key}
-          onPress={() => toggleReminder(item.key)}
-          className={`flex-row items-start p-4 mb-4 rounded-lg border ${selected.includes(item.key)
-            ? "border-primary bg-primary/10"
-            : "border-gray-300"
-            }`}
+          onPress={() => {
+            toggleReminder(item.key);
+            item.action();
+          }}
+          className={`flex-row items-start p-4 mb-4 rounded-lg border ${
+            selected.includes(item.key)
+              ? "border-primary bg-primary/10"
+              : "border-gray-300"
+          }`}
         >
           <Image
             source={getIconSource(item.icon)}
@@ -186,7 +206,7 @@ export default function ManageNotificationScreen() {
               width: 24,
               height: 24,
               marginRight: 12,
-              tintColor: selected.includes(item.key) ? undefined : '#888',
+              tintColor: selected.includes(item.key) ? undefined : "#888",
             }}
             resizeMode="contain"
           />
@@ -210,10 +230,9 @@ export default function ManageNotificationScreen() {
       <TouchableOpacity
         disabled={selected.length === 0}
         onPress={saveReminders}
-        className={`p-4 rounded-lg ${selected.length === 0
-          ? "bg-gray-300 opacity-50"
-          : "bg-primary"
-          }`}
+        className={`p-4 rounded-lg ${
+          selected.length === 0 ? "bg-gray-300 opacity-50" : "bg-primary"
+        }`}
       >
         <Text className="text-white text-center font-semibold">
           Select at least one reminder

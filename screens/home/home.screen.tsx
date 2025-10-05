@@ -44,9 +44,11 @@ export default function HomeScreen() {
       } catch (error: any) {
         if (axios.isAxiosError(error) && error.response) {
           const apiMessage = error.response.data?.message || "Something went wrong";
-          Alert.alert("Error", apiMessage);
+          console.log("Error", apiMessage);
+          // Alert.alert("Error", apiMessage);
         } else {
-          Alert.alert("Error", "Unexpected error occurred");
+          console.log("Error", "Unexpected error occurred");
+          // Alert.alert("Error", "Unexpected error occurred");
         }
       }
     };

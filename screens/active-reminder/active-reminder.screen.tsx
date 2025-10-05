@@ -21,7 +21,7 @@ const ActiveScreen = () => {
             style={{ flex: 1 }}
             keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
          >
-            <ScrollView contentContainerStyle={styles.scrollContent}>
+            <ScrollView contentContainerStyle={styles.scrollContent} className='pt-8'>
                <View style={styles.inner}>
                   <TouchableOpacity onPress={handleGoBack}>
                      <AntDesign name="left-circle" size={30} color="black" />

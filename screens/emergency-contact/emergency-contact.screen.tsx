@@ -128,15 +128,16 @@ const AddNewContact = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+        <ScrollView contentContainerStyle={styles.scrollContent} className="pt-8">
           <View style={styles.inner}>
             {/* Header */}
             <View style={styles.headerContainer}>
               <TouchableOpacity onPress={handleGoBack}>
-                <Ionicons name="chevron-back-circle-outline" size={30} color="black" />
+                <AntDesign name="left-circle" size={30} color="black" />
               </TouchableOpacity>
               <Text style={styles.headerText}>Add New Contact</Text>
             </View>
+            
 
             {/* Avatar */}
             <View style={styles.avatarContainer}>

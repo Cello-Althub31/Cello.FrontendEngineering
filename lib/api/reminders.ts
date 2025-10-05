@@ -1,23 +1,34 @@
 import axios from 'axios';
+import { API_URI } from "@/lib/utils/uri";
+import { secureStorage } from "@/lib/utils/secureStorage";
 import { Reminder, ReminderPayload } from '../types/reminders';
 
-const BASE_URL = 'https://your-api.com/api/medications';
+// Create axios instance so we can add interceptors if needed later
+const apiClient = axios.create({
+  baseURL: API_URI,
+});
 
-export const getActiveReminders = async (): Promise<Reminder[]> => {
-  const response = await axios.get(`${BASE_URL}?status=active`);
-  return response.data;
+// Add token automatically before each request
+apiClient.interceptors.request.use(async (config) => {
+  const token = await secureStorage.getTokens();
+  console.log("Attaching token to request:", token,);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+const remindersApi = {
+  getById: (id: string) => apiClient.get(`/medications${id}`),
+
+  createReminder: (data: createMedicationReminderRequest) =>
+    apiClient.post(`/reminder`, data),
+
+  hydrationReminder: (data: createHydrationReminderRequest) =>
+    apiClient.post(`/reminder`, data),
+
+  doctorAppointmentReminder: (data: createDoctorAppointmentRequest) =>
+    apiClient.post(`/reminder`, data),
 };
 
-export const createReminder = async (data: ReminderPayload): Promise<Reminder> => {
-  const response = await axios.post(BASE_URL, data);
-  return response.data;
-};
-
-export const updateReminder = async (id: string, data: Partial<ReminderPayload>): Promise<Reminder> => {
-  const response = await axios.patch(`${BASE_URL}/${id}`, data);
-  return response.data;
-};
-
-export const deleteReminder = async (id: string): Promise<void> => {
-  await axios.delete(`${BASE_URL}/${id}`);
-};
+export default remindersApi;

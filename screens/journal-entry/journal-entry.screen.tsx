@@ -60,7 +60,7 @@ const JournalEntryScreen = () => {
       style={styles.container}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent} className="pt-8">
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <AntDesign name="left-circle" size={28} color="#333" />
         </TouchableOpacity>

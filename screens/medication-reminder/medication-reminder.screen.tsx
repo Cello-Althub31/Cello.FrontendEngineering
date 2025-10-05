@@ -14,6 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import RNPickerSelect from "react-native-picker-select";
+import reminderApi from '@/lib/api/reminders';
 
 const MedicationReminderScreen = () => {
   const handleGoBack = () => {
@@ -43,6 +44,7 @@ const MedicationReminderScreen = () => {
     { label: "Evening", value: "evening" },
     { label: "Night", value: "night" },
   ];
+  const [name, setName] = useState("");
   const [bloodType, setBloodType] = useState("");
   const [dose, setDose] = useState("");
   const [amount, setAmount] = useState("");
@@ -62,8 +64,26 @@ const MedicationReminderScreen = () => {
   const handleNext = () => {
     router.push("/home");
   };
-  const handleScreen = () => {
-    router.push("/doctors-appointment");
+  const handleScreen = async () => {
+    if (!name || !dose || !frequency || !timeSlots || !startDate || !endDate || !amount || !bloodType) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    try {
+      const response = await reminderApi.createReminder({
+        name,
+        dosage: dose,
+        frequency,
+        times: timeSlots,
+        startDate,
+        endDate,
+        amount,
+      });
+      console.log("Medication Reminders Created Succesfully", response.data);
+    } catch (error) {
+      console.log("error creating medication reminders: ", error);
+    }
+    router.push("/wellbeing-calendar");
   };
 
   return (
@@ -79,7 +99,7 @@ const MedicationReminderScreen = () => {
         style={{ flex: 1 }}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+        <ScrollView contentContainerStyle={styles.scrollContent} className="pt-6">
           <View style={styles.inner}>
             <TouchableOpacity onPress={handleGoBack}>
               <AntDesign name="left-circle" size={30} color="black" />

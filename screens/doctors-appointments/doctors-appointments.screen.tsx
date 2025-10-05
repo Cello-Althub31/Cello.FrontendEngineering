@@ -1,18 +1,39 @@
 import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native'
 import React from 'react'
+import { useState } from "react";
 import { LinearGradient } from 'expo-linear-gradient'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import reminderApi from '@/lib/api/reminders';
+
 
 const AppointmentScreen = () => {
    const handleGoBack = () => {
       router.back();
    };
+   const [doctorName, setName] = useState("");
+     const [hospitalName, setHospitalName] = useState("");
+     const [dateTime, setdateTime] = useState("");
+     
    const handleNext = () => {
       router.push("/home");
    }
-   const handleScreen = () => {
-      router.push("/hydration-reminder");
+   const handleScreen = async () => {
+      if (!dateTime || !doctorName || !hospitalName) {
+         alert("please fill out required fields.");
+         return
+      }
+      try {
+         const response = await reminderApi.doctorAppointmentReminder({
+            doctorName,
+            hospitalName,
+            dateTime
+         });
+         console.log("Doctors Appointment Reminders created successfully", response.data);
+      } catch (error) {
+         console.log("error creating Doctor Appointment Reminders", error );
+      }
+      router.push("/wellbeing-calendar");
    }
 
    return (
@@ -28,7 +49,7 @@ const AppointmentScreen = () => {
             style={{ flex: 1 }}
             keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
          >
-            <ScrollView contentContainerStyle={styles.scrollContent}>
+            <ScrollView contentContainerStyle={styles.scrollContent} className='pt-6'>
                <View style={styles.inner}>
                   <TouchableOpacity onPress={handleGoBack}>
                      <AntDesign name="left-circle" size={30} color="black" />
@@ -39,8 +60,8 @@ const AppointmentScreen = () => {
                   </Text>
                   <View style={styles.formContainer}>
                      <View style={styles.formSection}>
-                        <Text style={styles.label}>Name</Text>
-                        <TextInput style={styles.input} placeholder="Name (e.g. Ibuprofen)" />
+                        <Text style={styles.label}>Doctor's Name</Text>
+                        <TextInput style={styles.input} placeholder="Name of physician" />
                      </View>
 
                      <View style={styles.formSection}>
@@ -52,8 +73,8 @@ const AppointmentScreen = () => {
                      </View>
 
                      <View style={styles.formSection}>
-                        <Text style={styles.label}>Doctors name</Text>
-                        <TextInput style={styles.input} placeholder="Dose (e.g. 100mg)" />
+                        <Text style={styles.label}>Hospital name</Text>
+                        <TextInput style={styles.input} placeholder="Name of Appointment Hospital" />
                      </View>
 
                      <View style={styles.formSection}>
