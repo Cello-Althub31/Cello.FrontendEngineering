@@ -11,7 +11,6 @@ const apiClient = axios.create({
 // Add token automatically before each request
 apiClient.interceptors.request.use(async (config) => {
   const token = await secureStorage.getTokens();
-  console.log("Attaching token to request:", token,);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -19,12 +18,10 @@ apiClient.interceptors.request.use(async (config) => {
 });
 
 const emergencyContactApi = {
-  getById: (id: string) => apiClient.get(`/emergencyContact${id}`),
+  getById: (id: string) => apiClient.get(`/emergencyContact/${id}`),
 
   createEmergencyContact: (data: createEmergencyContactRequest) =>
     apiClient.post(`/emergencyContact`, data),
-
-  
 };
 
 export default emergencyContactApi;

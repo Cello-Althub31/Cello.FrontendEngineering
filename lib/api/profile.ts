@@ -20,9 +20,9 @@ apiClient.interceptors.request.use(async (config) => {
 const profileApi = {
   getById: (id: string) => apiClient.get(`/profile/user/${id}`),
 
-  createProfile: (data: CreateProfileRequest) => 
+  createProfile: (data: CreateProfileRequest) =>
     apiClient.post(`/profile`, data),
-  
+
 };
 
 export default profileApi;

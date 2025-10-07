@@ -16,6 +16,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
+import emergencyContactApi from "@/lib/api/emergency";
 
 // ---------- Props Type for ConsentSentModal ----------
 type ConsentSentModalProps = {
@@ -88,23 +89,31 @@ const AddNewContact = () => {
 
   const relationships = ["Father", "Mother", "Sibling", "Friend", "Other"];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!fullName || !phoneNumber || !emailAddress || !relationship) {
       alert("Please fill all fields.");
       return;
     }
-    console.log("New Contact Data:", {
-      fullName,
-      phoneNumber,
-      emailAddress,
-      relationship,
-    });
-    setIsConsentModalVisible(true);
 
-    setTimeout(() => {
-      setIsConsentModalVisible(false);
-      // router.back();
-    }, 3000);
+    try {
+      const res = await emergencyContactApi.createEmergencyContact({
+        fullName,
+        phoneNumber,
+        emailAddress,
+        relationship,
+      });
+
+      console.log("Emergency contact created:", res.data);
+
+      setIsConsentModalVisible(true);
+      setTimeout(() => {
+        setIsConsentModalVisible(false);
+        router.back();
+      }, 5000);
+    } catch (error: any) {
+      console.error("Error creating contact:", error.response?.data || error);
+      alert("Failed to create emergency contact.");
+    }
   };
 
   const handleSelectRelationship = (selectedRelationship: string) => {
@@ -137,7 +146,7 @@ const AddNewContact = () => {
               </TouchableOpacity>
               <Text style={styles.headerText}>Add New Contact</Text>
             </View>
-            
+
 
             {/* Avatar */}
             <View style={styles.avatarContainer}>

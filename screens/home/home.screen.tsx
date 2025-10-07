@@ -39,7 +39,7 @@ export default function HomeScreen() {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const response = await profileApi.getById("68c08d75b24587239f718f9c");
+        const response = await profileApi.getById("68d2cf147e02163afb512c78");
         console.log("User profile data:", response.data);
       } catch (error: any) {
         if (axios.isAxiosError(error) && error.response) {

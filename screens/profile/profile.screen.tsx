@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StyleSheet,
   Text,
@@ -17,12 +17,13 @@ import { LinearGradient } from 'expo-linear-gradient'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import Ionicons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker'
 import { router } from 'expo-router';
 import profileApi from '@/lib/api/profile';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/lib/store/reduxStore';
 
 interface StatusModalProps {
   visible: boolean;
@@ -84,6 +85,8 @@ const StatusModal = ({
 };
 
 const ProfileScreen = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+  console.log({ user })
   const [fullName, setFullName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [showDateOfBirthPicker, setShowDateOfBirthPicker] = useState(false);
@@ -101,6 +104,31 @@ const ProfileScreen = () => {
 
   const genders = ['Male', 'Female', 'Other']
   const genotypes = ['AA', 'AS', 'SS', 'AC']
+
+  useEffect(() => {
+    const getUser = async () => {
+      if (!user?._id) {
+        console.log("User ID is undefined, cannot fetch profile.");
+        return;
+      }
+      try {
+        const response = await profileApi.getById(user._id);
+        console.log("User profile:", response.data);
+      } catch (error: any) {
+        console.log(error)
+        if (axios.isAxiosError(error) && error.response) {
+          const apiMessage = error.response.data?.message || "Something went wrong";
+          console.log("Error", apiMessage);
+          // Alert.alert("Error", apiMessage);
+        } else {
+          console.log("Error", "Unexpected error occurred");
+          // Alert.alert("Error", "Unexpected error occurred");
+        }
+      }
+    };
+
+    getUser();
+  }, []);
 
   interface OnChangeDateOfBirthEvent {
     type: string;
@@ -148,6 +176,7 @@ const ProfileScreen = () => {
       return;
     }
     console.log('Submitting profile with data:', { fullName, dateOfBirth, gender, genotype, diagnosis });
+    return
     try {
       const response = await profileApi.createProfile({
         fullName,

@@ -55,7 +55,7 @@ export interface ApiError {
 }
 
 export interface AuthState {
-  user: User | null;
+  user: IUser | null;
   token: string | null;
   isLoading: boolean;
   error: string | null;
@@ -69,4 +69,23 @@ export interface GoogleSignInResponse {
     photo?: string;
   };
   idToken: string;
+}
+
+export interface IUser {
+  _id: string;
+  email: string;
+  user_status?: string;
+  profilePicture?: string | null;
+  signupMethod?: string;
+  isEmailVerified?: boolean;
+  isOAuthUser?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  verificationCode?: string;
+  verificationCodeExpiry?: string;
+  fullName?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  genotype?: string;
+  diagnosis?: string;
 }

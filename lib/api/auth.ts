@@ -14,6 +14,8 @@ const authApi = {
 
   login: (data: LoginRequest) => axios.post(`${API_URI}/auth/login`, data),
 
+  loggedInUser: () => axios.get(`${API_URI}/auth/me`),
+
   verifyEmail: (data: VerifyEmailRequest) =>
     axios.post(`${API_URI}/auth/verifyEmail`, data),
 
