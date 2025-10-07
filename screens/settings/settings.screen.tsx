@@ -32,7 +32,7 @@ const SettingsScreen = () => {
     setIsFaceIdEnabled((previousState) => !previousState);
 
   const handleNavigation = () => {
-    router.push("/add-emergency");
+    router.push("/emergency-contacts");
   };
   const handleLogout = () => {
     logout();

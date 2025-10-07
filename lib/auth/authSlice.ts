@@ -132,6 +132,21 @@ export const googleOAuth = createAsyncThunk(
   }
 );
 
+export const userLoggedIn = createAsyncThunk(
+  "auth/me",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await authApi.loggedInUser();
+      console.log("logged in user: ", res.data)
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch logged-in user"
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -164,6 +179,16 @@ const authSlice = createSlice({
         state.error = null;
         console.log("Storing tokens and user in secure storage:", action.payload);
         secureStorage.storeTokens(action.payload.token);
+      })
+      .addCase(userLoggedIn.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.error = null;
+        secureStorage.storeUser(action.payload.user);
+      })
+      .addCase(userLoggedIn.rejected, (state, action) => {
+        state.error =
+          (action as { payload?: string }).payload ||
+          "Failed to fetch logged-in user";
       })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),

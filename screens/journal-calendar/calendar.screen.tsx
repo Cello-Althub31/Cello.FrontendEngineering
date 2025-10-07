@@ -75,7 +75,7 @@ const JournalCalendar = () => {
             <TouchableOpacity
               style={[
                 styles.newEntryButton,
-                !selectedDate && styles.disabledButton,
+                selectedDate && styles.disabledButton,
               ]}
               onPress={handleNewEntry}
               disabled={!selectedDate}
