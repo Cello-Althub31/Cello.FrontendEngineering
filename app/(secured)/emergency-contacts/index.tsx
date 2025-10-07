@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Drawer from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
-import AddNewContact from "@/screens/add-emergency-contact/add-emergency-contact.screen";
+import EmergencyContactScreen from "@/screens/emergency-contact/emergency-contact.screen";
 
 const EmergencyContact = () => {
   return (
@@ -11,7 +11,7 @@ const EmergencyContact = () => {
           headerShown: false,
         }}
       />
-      <AddNewContact />
+      <EmergencyContactScreen />
       <StatusBar style="dark" />
     </>
   );
