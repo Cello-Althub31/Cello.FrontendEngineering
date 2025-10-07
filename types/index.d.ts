@@ -33,3 +33,9 @@ interface createDoctorAppointmentRequest {
   
   
 }
+interface createEmergencyContactRequest {
+  fullName: string;
+  emailAddress: string;
+  phoneNumber: string;
+  relationship: string;
+}

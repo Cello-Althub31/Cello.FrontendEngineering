@@ -59,7 +59,7 @@ export default function VerifyScreen() {
       }
     } else {
       Alert.alert("Invalid OTP", "Please try again.");
-      setOTP(["", "", "", ""]);
+      setOTP(["", "", "", "", "", "", ""]);
       setTimeout(() => inputRef.current[0]?.focus(), 150);
     }
   };
