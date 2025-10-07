@@ -22,6 +22,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { router } from 'expo-router';
 import profileApi from '@/lib/api/profile';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
 
 interface StatusModalProps {
   visible: boolean;
@@ -164,11 +165,15 @@ const ProfileScreen = () => {
       setModalTitle("Successful");
       setModalMessage("Your Profile has been set up successfully");
       setStatusModalVisible(true);
-    } catch (error) {
-      console.log("error creating profile: ", error)
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        console.log("API Error:", error.response?.data || error.message);
+        alert(error.response?.data?.message || "Something went wrong");
+      } else {
+        console.log("Unexpected Error:", error);
+        alert("Unexpected error occurred");
+      }
     }
-
-
   };
 
   const handleSuccessModalPress = () => {

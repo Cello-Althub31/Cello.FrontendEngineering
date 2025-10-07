@@ -114,14 +114,14 @@ export default function VerifyScreen() {
               Enter OTP Code
             </Text>
             <Text className="text-wrap text-center text-sm font-poppins">
-              Enter the 4-digit OTP that was sent to{" "}
+              Enter the 6-digit OTP that was sent to{" "}
               <Text className="font-poppins-semibold font-semibold">
                 example@gmail.com
               </Text>
             </Text>
 
             <View className="w-full flex-row justify-center mt-4 gap-6">
-              {[0, 1, 2, 3].map((index) => (
+              {[0, 1, 2, 3, 4, 5].map((index) => (
                 <TextInput
                   key={index}
                   style={{
