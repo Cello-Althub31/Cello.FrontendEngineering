@@ -6,6 +6,8 @@ import {
   ImageSourcePropType,
   StyleProp,
   ViewStyle,
+  ActivityIndicator,
+  View,
 } from "react-native";
 
 type ButtonProps = {
@@ -15,6 +17,7 @@ type ButtonProps = {
   className?: string; // Tailwind classes for Pressable
   textClassName?: string; // Tailwind classes for Text
   disabled?: boolean;
+  loading?: boolean; // ✅ new
   image?: ImageSourcePropType; // Optional image
   imageClassName?: string; // Tailwind classes for image
   style?: StyleProp<ViewStyle>;
@@ -29,7 +32,8 @@ export default function Button({
   image,
   imageClassName = "",
   disabled = false,
-  style
+  loading = false, // ✅ new
+  style,
 }: ButtonProps) {
   const baseClass =
     "px-6 py-3 rounded-2xl items-center justify-center flex-row";
@@ -42,37 +46,48 @@ export default function Button({
       textClassName ?? ""
     );
 
-    const variantBg =
-      variant === "outline"
-        ? `${!hasCustomBorderColor ? "border border-primary" : ""} ${
-            !hasCustomBgColor ? "bg-transparent" : ""
-          }`
-        : !hasCustomBgColor
-          ? "bg-primary"
-          : "";  
+  const variantBg =
+    variant === "outline"
+      ? `${!hasCustomBorderColor ? "border border-primary" : ""} ${!hasCustomBgColor ? "bg-transparent" : ""
+      }`
+      : !hasCustomBgColor
+        ? "bg-primary"
+        : "";
 
   const textColor = variant === "outline" ? "text-primary" : "text-white";
 
   return (
     <Pressable
-      onPress={onPress}
-      disabled={disabled}
-      className={`${baseClass} ${!hasCustomBgColor ? variantBg : ""} ${className}`}
+      onPress={!disabled && !loading ? onPress : undefined}
+      disabled={disabled || loading}
+      className={`${baseClass} ${!hasCustomBgColor ? variantBg : ""} ${className} ${disabled || loading ? "opacity-60" : ""
+        }`}
       style={style}
     >
-      {image && (
-        <Image
-          source={image}
-          className={`mr-2 ${imageClassName}`}
-          resizeMode="contain"
+      {loading ? (
+        // ✅ Show spinner when loading
+        <ActivityIndicator
+          size="small"
+          color={variant === "outline" ? "#F87171" : "#FFF"}
         />
-      )}
-      {title && (
-        <Text
-          className={`${baseTextClass} ${!hasCustomTextColor ? textColor : ""} ${textClassName}`}
-        >
-          {title}
-        </Text>
+      ) : (
+        <View className="flex-row items-center justify-center">
+          {image && (
+            <Image
+              source={image}
+              className={`mr-2 ${imageClassName}`}
+              resizeMode="contain"
+            />
+          )}
+          {title && (
+            <Text
+              className={`${baseTextClass} ${!hasCustomTextColor ? textColor : ""
+                } ${textClassName}`}
+            >
+              {title}
+            </Text>
+          )}
+        </View>
       )}
     </Pressable>
   );

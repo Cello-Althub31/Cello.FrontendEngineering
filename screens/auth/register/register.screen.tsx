@@ -58,7 +58,7 @@ export default function RegisterScreen() {
       if (signup.fulfilled.match(resultAction)) {
         router.push({
           pathname: "/auth/verify",
-          params: { route: "register" },
+          params: { route: "register", email: formData.email },
         });
       } else {
         const errorMessage =

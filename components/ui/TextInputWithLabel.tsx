@@ -47,6 +47,7 @@ const TextInputWithLabel: React.FC<{ props: TextInputWithLabelProps }> = ({
         onChangeText={onChangeText}
         value={value}
         keyboardType={keyboardType}
+        importantForAutofill="no"
         className="w-full border rounded-2xl font-poppins text-sm"
         style={{
           borderColor: "#D1D5DB",
