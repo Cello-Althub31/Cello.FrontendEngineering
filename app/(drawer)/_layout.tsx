@@ -1,7 +1,13 @@
 import { Drawer } from "expo-router/drawer";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+  AntDesign,
+} from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
+import { red } from "react-native-reanimated/lib/typescript/Colors";
 
 export default function DrawerLayout() {
   return (
@@ -13,7 +19,9 @@ export default function DrawerLayout() {
         headerRight: () => (
           <View style={{ flexDirection: "row", gap: 16, marginRight: 12 }}>
             {/* Notifications */}
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              onPress={() => {}}
+            >
               <Ionicons name="notifications-outline" size={24} color="#000" />
             </TouchableOpacity>
 
@@ -21,35 +29,24 @@ export default function DrawerLayout() {
             <TouchableOpacity onPress={() => {}}>
               <Ionicons name="person-circle-outline" size={26} color="#000" />
             </TouchableOpacity>
+            {/* emergency */}
+            <TouchableOpacity onPress={() => {}}>
+              <AntDesign name="alert" size={26} color="red" />
+            </TouchableOpacity>
           </View>
         ),
       }}
     >
       <Drawer.Screen
-        name="medication-reminder/index"
+        name="home/index"
         options={{
           title: "",
           drawerIcon: ({ color, size }) => (
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
             >
-              <Ionicons name="medkit-outline" size={size} color={color} />
-              <Text>Medication Reminder</Text>
-            </View>
-          ),
-        }}
-      />
-
-      <Drawer.Screen
-        name="profile/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="person-outline" size={size} color={color} />
-              <Text>Profile</Text>
+              <Ionicons name="home-outline" size={size} color={color} />
+              <Text>Home</Text>
             </View>
           ),
         }}
@@ -62,74 +59,41 @@ export default function DrawerLayout() {
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
             >
-              <Ionicons name="calendar-outline" size={size} color={color} />
-              <Text>Wellbeing Calendar</Text>
+              <Ionicons name="medkit-outline" size={size} color="red" />
+              <Text>Well-being Calendar</Text>
             </View>
           ),
         }}
       />
+       <Drawer.Screen
+        name="profile/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <Ionicons name="person-outline" size={size} color="red" />
+              <Text>Profile</Text>
+            </View>
+          ),
+        }}
+      />
+    
+<Drawer.Screen
+  name="settings/index"
+  options={{
+    title: "",
+    drawerIcon: ({ color, size }) => (
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        <Ionicons name="settings-outline" size={size} color={color} />
+        <Text>Settings</Text>
+      </View>
+    ),
+  }}
+/>
 
-      <Drawer.Screen
-        name="journal/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="book-outline" size={size} color={color} />
-              <Text>Journal</Text>
-            </View>
-          ),
-        }}
-      />
-
-      <Drawer.Screen
-        name="history/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="time-outline" size={size} color={color} />
-              <Text>History</Text>
-            </View>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="notifications/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons
-                name="notifications-outline"
-                size={size}
-                color={color}
-              />
-              <Text>Notifications</Text>
-            </View>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="settings/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="settings-outline" size={size} color={color} />
-              <Text>Settings</Text>
-            </View>
-          ),
-        }}
-      />
+      {/* Add more drawer screens here */}
     </Drawer>
   );
 }

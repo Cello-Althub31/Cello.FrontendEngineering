@@ -1,477 +1,356 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Modal,
-  Pressable,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Feather from "@expo/vector-icons/Feather";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { router } from "expo-router";
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    ScrollView,
+    TouchableOpacity,
+    Modal,
+    Pressable,
+    ActivityIndicator,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Feather from '@expo/vector-icons/Feather';
+import { router } from 'expo-router';
+import emergencyContactApi from '@/lib/api/emergency';
+import axios from 'axios';
 
-// ---------- Props Type for ConsentSentModal ----------
-type ConsentSentModalProps = {
-  visible: boolean;
-  onClose: () => void;
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
-};
+interface EmergencyContact {
+    _id: string;
+    fullName: string;
+    phoneNumber: string;
+    emailAddress: string;
+    relationship: string;
+    createdAt: string;
+    updatedAt: string;
+    user: string;
+    __v: number;
+}
 
-const ConsentSentModal = ({
-  visible,
-  onClose,
-  contactName,
-  contactEmail,
-  contactPhone,
-}: ConsentSentModalProps) => {
-  return (
-    <Modal
-      animationType="fade"
-      transparent={false}
-      visible={visible}
-      onRequestClose={onClose}
-    >
-      <View style={modalStyles.centeredView}>
-        <LinearGradient
-          colors={["#ffffff", "#ffffff", "#E64646"]}
-          locations={[0.09, 0.45, 1]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={modalStyles.modalGradient}
-        >
-          <View style={modalStyles.checkmarkCircle}>
-            <Ionicons name="checkmark" size={60} color="white" />
-          </View>
-          <Text style={modalStyles.modalTitle}>Consent Request Sent</Text>
-          <Text style={modalStyles.modalText}>
-            We've sent a consent request to{" "}
-            <Text style={modalStyles.boldText}>{contactName}</Text> at{" "}
-            <Text style={modalStyles.boldText}>{contactEmail}</Text> and{" "}
-            <Text style={modalStyles.boldText}>{contactPhone}</Text>
-          </Text>
-
-          <View style={modalStyles.whatsNextBox}>
-            <Text style={modalStyles.whatsNextTitle}>What's Next?</Text>
-            <Text style={modalStyles.whatsNextText}>
-              <Text style={modalStyles.boldText}>{contactName}</Text> will
-              receive a message explaining that you'd like to add them as an
-              emergency contact.
-            </Text>
-            <Text style={modalStyles.whatsNextText}>
-              Once they respond, you'll receive a notification letting you know
-              their decision.
-            </Text>
-          </View>
-        </LinearGradient>
-      </View>
-    </Modal>
-  );
-};
-
-const AddNewContact = () => {
-  const [fullName, setFullName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
-  const [relationship, setRelationship] = useState("");
-  const [isRelationshipDropdownOpen, setIsRelationshipDropdownOpen] =
-    useState(false);
-  const [isConsentModalVisible, setIsConsentModalVisible] = useState(false);
-
-  const relationships = ["Father", "Mother", "Sibling", "Friend", "Other"];
-
-  const handleNext = () => {
-    if (!fullName || !phoneNumber || !emailAddress || !relationship) {
-      alert("Please fill all fields.");
-      return;
+const getInitials = (name: string) => {
+    if (!name) return '';
+    const parts = name.split(' ');
+    if (parts.length === 1) {
+        return parts[0].charAt(0).toUpperCase();
     }
-    console.log("New Contact Data:", {
-      fullName,
-      phoneNumber,
-      emailAddress,
-      relationship,
-    });
-    setIsConsentModalVisible(true);
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+};
 
-    setTimeout(() => {
-      setIsConsentModalVisible(false);
-      // router.back();
-    }, 3000);
-  };
+const EmergencyContactScreen = () => {
+    const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+    const [filteredContacts, setFilteredContacts] = useState<EmergencyContact[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [addContactModalVisible, setAddContactModalVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-  const handleSelectRelationship = (selectedRelationship: string) => {
-    setRelationship(selectedRelationship);
-    setIsRelationshipDropdownOpen(false);
-  };
-
-  const handleGoBack = () => {
-    router.back();
-  };
-
-  return (
-    <LinearGradient
-      colors={["#FFFDFD00", "#FFFDFD00", "#E64646"]}
-      locations={[0.09, 0.45, 1]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.container}
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.inner}>
-            {/* Header */}
-            <View style={styles.headerContainer}>
-              <TouchableOpacity onPress={handleGoBack}>
-                <Ionicons name="chevron-back-circle-outline" size={30} color="black" />
-              </TouchableOpacity>
-              <Text style={styles.headerText}>Add New Contact</Text>
-            </View>
-
-            {/* Avatar */}
-            <View style={styles.avatarContainer}>
-              <View style={styles.avatarCircle}>
-                <Feather name="user" size={60} color="white" />
-              </View>
-            </View>
-
-            {/* Form */}
-            <View style={styles.formContainer}>
-              <View style={styles.inputWrapper}>
-                <Feather
-                  name="user"
-                  size={20}
-                  color="#777"
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Full Name"
-                  placeholderTextColor="#999"
-                  value={fullName}
-                  onChangeText={setFullName}
-                />
-              </View>
-
-              <View style={styles.inputWrapper}>
-                <Feather
-                  name="phone"
-                  size={20}
-                  color="#777"
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Phone Number"
-                  placeholderTextColor="#999"
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
-                  keyboardType="phone-pad"
-                />
-              </View>
-
-              <View style={styles.inputWrapper}>
-                <Feather
-                  name="mail"
-                  size={20}
-                  color="#777"
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Email address"
-                  placeholderTextColor="#999"
-                  value={emailAddress}
-                  onChangeText={setEmailAddress}
-                  keyboardType="email-address"
-                />
-              </View>
-
-              {/* Relationship Dropdown */}
-              <TouchableOpacity
-                style={styles.dropdownWrapper}
-                onPress={() =>
-                  setIsRelationshipDropdownOpen(!isRelationshipDropdownOpen)
+    useEffect(() => {
+        const loadContactList = async () => {
+            try {
+                const response = await emergencyContactApi.getAll();
+                const fetchedContacts: EmergencyContact[] = response.data.data || [];
+                setContacts(fetchedContacts);
+                setFilteredContacts(fetchedContacts);
+            } catch (error: any) {
+                console.error("Error loading contacts:", error);
+                if (axios.isAxiosError(error) && error.response) {
+                    const apiMessage = error.response.data?.message || "Something went wrong";
+                    console.log("API Error:", apiMessage);
+                } else {
+                    console.log("Unexpected error occurred");
                 }
-                activeOpacity={0.7}
-              >
-                <Feather
-                  name="heart"
-                  size={20}
-                  color="#777"
-                  style={styles.inputIcon}
-                />
-                <Text
-                  style={
-                    relationship
-                      ? styles.dropdownText
-                      : styles.dropdownPlaceholder
-                  }
-                >
-                  {relationship || "Relationship"}
-                </Text>
-                <AntDesign
-                  name={isRelationshipDropdownOpen ? "up" : "down"}
-                  size={16}
-                  color="#777"
-                  style={styles.dropdownIcon}
-                />
-              </TouchableOpacity>
+            } finally {
+                setLoading(false);
+            }
+        };
 
-              {/* Relationship Modal */}
-              <Modal
+        loadContactList();
+    }, []);
+
+    const handleSearch = (text: string) => {
+        setSearchTerm(text);
+        const term = text.toLowerCase();
+        if (term === '') {
+            setFilteredContacts(contacts);
+        } else {
+            const filtered = contacts.filter(contact =>
+                contact.fullName.toLowerCase().includes(term) ||
+                contact.relationship.toLowerCase().includes(term)
+            );
+            setFilteredContacts(filtered);
+        }
+    };
+
+    const handleAddContact = () => {
+        router.push("/add-emergency");
+    };
+
+    const handleGoBack = () => {
+        router.back();
+    };
+
+    return (
+        <LinearGradient
+            colors={['#FFFDFD00', '#FFFDFD00', '#E64646']}
+            locations={[0.09, 0.45, 1]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.container}
+        >
+            <ScrollView contentContainerStyle={styles.scrollContent} className="pt-8">
+                <View style={styles.inner}>
+                    <View style={styles.headerContainer}>
+                        <TouchableOpacity onPress={handleGoBack}>
+                            <AntDesign name="left-circle" size={30} color="black" />
+                        </TouchableOpacity>
+                        <Text style={styles.headerText}>Emergency Contacts</Text>
+                    </View>
+
+                    <Text style={styles.subHeader}>
+                        These are the people we'll notify if you ever need urgent help. You can add up to 3 trusted contacts.
+                    </Text>
+
+                    <View style={styles.searchBar}>
+                        <Feather name="search" size={20} color="#777" style={styles.searchIcon} />
+                        <TextInput
+                            style={styles.searchInput}
+                            placeholder="Search"
+                            placeholderTextColor="#999"
+                            value={searchTerm}
+                            onChangeText={handleSearch}
+                        />
+                    </View>
+
+                    {loading ? (
+                        <ActivityIndicator size="large" color="#E64646" style={{ marginTop: 40 }} />
+                    ) : (
+                        <View style={styles.contactList}>
+                            {filteredContacts.length > 0 ? (
+                                filteredContacts.map((contact) => (
+                                    <View key={contact._id} style={styles.contactCard}>
+                                        <View style={[styles.initialsCircle, { backgroundColor: "#E64646" }]}>
+                                            <Text style={styles.initialsText}>{getInitials(contact.fullName)}</Text>
+                                        </View>
+                                        <View style={styles.contactInfo}>
+                                            <Text style={styles.contactName}>{contact.fullName}</Text>
+                                            <Text style={styles.contactRelationship}>{contact.relationship}</Text>
+                                            <Text style={styles.contactPhone}>{contact.phoneNumber}</Text>
+                                        </View>
+                                    </View>
+                                ))
+                            ) : (
+                                <Text style={{ textAlign: 'center', color: '#777', marginTop: 30 }}>
+                                    No contacts found.
+                                </Text>
+                            )}
+                        </View>
+                    )}
+                </View>
+            </ScrollView>
+
+            <TouchableOpacity
+                style={styles.fab}
+                onPress={handleAddContact}
+                activeOpacity={0.7}
+            >
+                <AntDesign name="plus" size={30} color="white" />
+            </TouchableOpacity>
+
+            <Modal
                 animationType="fade"
                 transparent={true}
-                visible={isRelationshipDropdownOpen}
-                onRequestClose={() => setIsRelationshipDropdownOpen(false)}
-              >
-                <Pressable
-                  style={styles.modalOverlay}
-                  onPress={() => setIsRelationshipDropdownOpen(false)}
-                >
-                  <View style={styles.modalContent}>
-                    {relationships.map((rel, index) => (
-                      <Pressable
-                        key={index}
-                        style={styles.dropdownItem}
-                        onPress={() => handleSelectRelationship(rel)}
-                      >
-                        <Text style={styles.dropdownItemText}>{rel}</Text>
-                      </Pressable>
-                    ))}
-                  </View>
-                </Pressable>
-              </Modal>
-            </View>
-
-            {/* Next Button */}
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-                <Text style={styles.nextButtonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-
-      {/* Consent Modal */}
-      <ConsentSentModal
-        visible={isConsentModalVisible}
-        onClose={() => setIsConsentModalVisible(false)}
-        contactName={fullName}
-        contactEmail={emailAddress}
-        contactPhone={phoneNumber}
-      />
-    </LinearGradient>
-  );
+                visible={addContactModalVisible}
+                onRequestClose={() => setAddContactModalVisible(false)}
+            >
+                <View style={styles.modalCenteredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalTitle}>Add New Contact</Text>
+                        <Text style={styles.modalText}>
+                            This is a placeholder for the "Add Contact" functionality.
+                        </Text>
+                        <Pressable
+                            style={styles.modalButton}
+                            onPress={() => setAddContactModalVisible(false)}
+                        >
+                            <Text style={styles.modalButtonText}>Close</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+        </LinearGradient>
+    );
 };
 
-export default AddNewContact;
+export default EmergencyContactScreen;
 
-// ---------- Styles ----------
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingTop: 50,
-    paddingBottom: 60,
-  },
-  inner: {
-    width: "90%",
-    alignSelf: "center",
-  },
-  headerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 15,
-    marginBottom: 40,
-  },
-  headerText: {
-    fontSize: 26,
-    fontWeight: "600",
-  },
-  avatarContainer: {
-    width: "100%",
-    alignItems: "center",
-    marginBottom: 40,
-  },
-  avatarCircle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: "#2563EB",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  formContainer: {
-    gap: 20,
-    marginBottom: 30,
-  },
-  inputWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  inputIcon: {
-    marginRight: 15,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-  },
-  dropdownWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-    position: "relative",
-  },
-  dropdownText: {
-    flex: 1,
-    fontSize: 16,
-    color: "black",
-  },
-  dropdownPlaceholder: {
-    flex: 1,
-    fontSize: 16,
-    color: "#999",
-  },
-  dropdownIcon: {
-    marginLeft: "auto",
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    paddingTop: "45%",
-  },
-  modalContent: {
-    width: "80%",
-    backgroundColor: "white",
-    borderRadius: 15,
-    padding: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  dropdownItem: {
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-  },
-  dropdownItemText: {
-    fontSize: 16,
-    color: "black",
-  },
-  buttonContainer: {
-    width: "90%",
-    alignSelf: "center",
-    marginBottom: 40,
-    marginTop: 30,
-  },
-  nextButton: {
-    backgroundColor: "#E64646",
-    paddingVertical: 18,
-    borderRadius: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 8,
-  },
-  nextButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
-
-// ---------- Modal Styles ----------
-const modalStyles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalGradient: {
-    flex: 1,
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 30,
-  },
-  checkmarkCircle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: "#16A34A",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  modalText: {
-    fontSize: 16,
-    color: "#555",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  boldText: {
-    fontWeight: "bold",
-  },
-  whatsNextBox: {
-    backgroundColor: "#FEE2E2",
-    borderWidth: 1,
-    borderColor: "#EF4444",
-    borderRadius: 15,
-    padding: 20,
-    marginTop: 20,
-    width: "100%",
-  },
-  whatsNextTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#EF4444",
-    marginBottom: 10,
-  },
-  whatsNextText: {
-    fontSize: 14,
-    color: "#555",
-    marginBottom: 5,
-  },
+    container: {
+        flex: 1,
+    },
+    scrollContent: {
+        flexGrow: 1,
+        paddingTop: 50,
+    },
+    inner: {
+        width: '90%',
+        alignSelf: 'center',
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 15,
+        marginBottom: 20,
+    },
+    headerText: {
+        fontSize: 26,
+        fontWeight: '600',
+    },
+    subHeader: {
+        fontSize: 18,
+        fontWeight: 400,
+        color: '#555',
+        marginBottom: 30,
+    },
+    searchBar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3,
+    },
+    searchIcon: {
+        marginRight: 10,
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 16,
+    },
+    contactList: {
+        gap: 15,
+    },
+    contactCard: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderRadius: 15,
+        padding: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3,
+    },
+    initialsCircle: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 15,
+    },
+    initialsText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 20,
+    },
+    contactInfo: {
+        flex: 1,
+        gap: 5
+    },
+    contactName: {
+        fontSize: 18,
+        fontWeight: '600',
+    },
+    contactRelationship: {
+        fontSize: 14,
+        color: '#888',
+    },
+    contactTag: {
+        width: 120,
+        height: 20,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 20,
+    },
+    contactTagText: {
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
+    fab: {
+        position: 'absolute',
+        bottom: 40,
+        right: 30,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        backgroundColor: '#B22222',
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 8,
+    },
+    modalCenteredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+    },
+    modalButton: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        marginTop: 10,
+        width: 100,
+        alignItems: 'center',
+        backgroundColor: "#E64646",
+    },
+    modalButtonText: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    contactPhone: {
+        backgroundColor: "#FAECDE",
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 50,
+        alignSelf: 'flex-start',
+    }
 });

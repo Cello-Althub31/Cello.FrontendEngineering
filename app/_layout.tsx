@@ -15,8 +15,8 @@ import { useColorScheme } from "nativewind";
 import { reduxStore } from "@/lib/store/reduxStore";
 import { useAppSelector, useAppDispatch } from "@/hooks";
 import { rehydrateAuth } from "@/lib/auth/authSlice";
-
-
+import Toast from "react-native-toast-message";
+import { View, ActivityIndicator } from "react-native";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -39,9 +39,7 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
+    if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
 
   if (!loaded) return null;
@@ -54,17 +52,28 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { colorScheme } = useColorScheme();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const [hydrated, setHydrated] = useState(false);
+  const { colorScheme } = useColorScheme();
 
   useEffect(() => {
     dispatch(rehydrateAuth()).finally(() => setHydrated(true));
   }, [dispatch]);
 
   if (!hydrated) {
-    return null; // or splash/loading screen
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#fff",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="#D9534F" />
+      </View>
+    );
   }
 
   return (
@@ -76,7 +85,7 @@ function RootLayoutNav() {
           <Stack.Screen name="(routes)" />
         )}
       </Stack>
-
+      <Toast />
     </>
   );
 }

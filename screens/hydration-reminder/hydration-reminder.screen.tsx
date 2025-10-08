@@ -12,7 +12,8 @@ const HydrationScreen = () => {
    const handleNext = () => {
       router.push("/home");
    };
-   const handleScreen = () => {
+   const handleScreen = async () => {
+      
       router.push("/active-reminder");
    };
 
@@ -52,7 +53,7 @@ const HydrationScreen = () => {
             style={{ flex: 1 }}
             keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
          >
-            <ScrollView contentContainerStyle={styles.scrollContent}>
+            <ScrollView contentContainerStyle={styles.scrollContent} className='pt-6'>
                <View style={styles.inner}>
                   <TouchableOpacity onPress={handleGoBack}>
                      <AntDesign name="left-circle" size={30} color="black" />

@@ -1,9 +1,25 @@
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, Switch, ActionSheetIOS } from 'react-native';
-import React, { useState } from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome6, Fontisto, Ionicons, Feather } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import { logout } from '@/lib/auth/authSlice';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Switch,
+  ActionSheetIOS,
+} from "react-native";
+import React, { useState } from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  AntDesign,
+  FontAwesome6,
+  Fontisto,
+  Ionicons,
+  Feather,
+} from "@expo/vector-icons";
+import { router } from "expo-router";
+import { logout } from "@/lib/auth/authSlice";
 
 const SettingsScreen = () => {
   const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(false);
@@ -12,48 +28,97 @@ const SettingsScreen = () => {
     router.back();
   };
 
-  const toggleFaceIdSwitch = () => setIsFaceIdEnabled(previousState => !previousState);
+  const toggleFaceIdSwitch = () =>
+    setIsFaceIdEnabled((previousState) => !previousState);
 
   const handleNavigation = () => {
-    router.push('/add-emergency');
+    router.push("/emergency-contacts");
   };
   const handleLogout = () => {
     logout();
-    router.push('/auth/login');
-  }
+    router.push("/auth/login");
+  };
 
   const menuItems = [
-    { id: 'myAccount', title: 'My Account', subtitle: 'Make changes to your account', icon: <AntDesign name="user" size={30} color="black" />, alert: true },
-    { id: 'emergencyContact', title: 'Emergency Contact', subtitle: 'Add an Emergency Contact', icon: <Ionicons name="person-circle-outline" size={38} color="black" />, action: () => handleNavigation() },
-    { id: 'faceId', title: 'Face ID / Touch ID', subtitle: 'Manage your device security', icon: <Fontisto name="locked" size={24} color="black" />, toggle: true },
-    { id: 'twoFactor', title: 'Two-Factor Authentication', subtitle: 'Further secure your account for safety', icon: <Feather name="shield" size={26} color="black" /> },
-    { id: 'logOut', title: 'Log out', subtitle: 'Further secure your account for safety', icon: <AntDesign name="logout" size={26} color="black" />, action: () => handleLogout() },
+    {
+      id: "myAccount",
+      title: "My Account",
+      subtitle: "Make changes to your account",
+      icon: <AntDesign name="user" size={30} color="black" />,
+      alert: true,
+    },
+    {
+      id: "emergencyContact",
+      title: "Emergency Contact",
+      subtitle: "Add an Emergency Contact",
+      icon: <Ionicons name="person-circle-outline" size={38} color="black" />,
+      action: () => handleNavigation(),
+    },
+    {
+      id: "faceId",
+      title: "Face ID / Touch ID",
+      subtitle: "Manage your device security",
+      icon: <Fontisto name="locked" size={24} color="black" />,
+      toggle: true,
+    },
+    {
+      id: "twoFactor",
+      title: "Two-Factor Authentication",
+      subtitle: "Further secure your account for safety",
+      icon: <Feather name="shield" size={26} color="black" />,
+    },
+    {
+      id: "logOut",
+      title: "Log Out",
+      subtitle: "Further secure your account for safety",
+      icon: <AntDesign name="logout" size={26} color="black" />,
+      action: () => handleLogout(),
+    },
   ];
 
   const moreItems = [
-    { id: 'help', title: 'Help & Support', icon: <Feather name="bell" size={26} color="black" /> },
-    { id: 'about', title: 'About App', icon: <Feather name="heart" size={26} color="black" /> },
+    {
+      id: "help",
+      title: "Help & Support",
+      icon: <Feather name="bell" size={26} color="black" />,
+    },
+    {
+      id: "about",
+      title: "About App",
+      icon: <Feather name="heart" size={26} color="black" />,
+    },
   ];
 
   const renderMenuItem = (item: MenuItemProps) => (
-    <TouchableOpacity key={item.id} style={styles.menuItem} onPress={item.action}>
+    <TouchableOpacity
+      key={item.id}
+      style={styles.menuItem}
+      onPress={item.action}
+    >
       <View style={styles.menuItemContent}>
         <View style={styles.menuIconContainer}>
-          <View style={styles.iconBackground}>
-            {item.icon}
-          </View>
+          <View style={styles.iconBackground}>{item.icon}</View>
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.menuTitle}>{item.title}</Text>
-          {item.subtitle && <Text style={styles.menuSubtitle}>{item.subtitle}</Text>}
+          {item.subtitle && (
+            <Text style={styles.menuSubtitle}>{item.subtitle}</Text>
+          )}
         </View>
       </View>
       <View style={styles.rightContainer}>
-        {item.alert && <AntDesign name="warning" size={20} color="red" style={styles.alertIcon} />}
+        {item.alert && (
+          <AntDesign
+            name="warning"
+            size={20}
+            color="red"
+            style={styles.alertIcon}
+          />
+        )}
         {item.toggle ? (
           <Switch
-            trackColor={{ false: '#767577', true: '#B22222' }}
-            thumbColor={isFaceIdEnabled ? '#f4f3f4' : '#f4f3f4'}
+            trackColor={{ false: "#767577", true: "#B22222" }}
+            thumbColor={isFaceIdEnabled ? "#f4f3f4" : "#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleFaceIdSwitch}
             value={isFaceIdEnabled}
@@ -67,16 +132,16 @@ const SettingsScreen = () => {
 
   return (
     <LinearGradient
-      colors={['#FFFDFD00', '#FFFDFD00', '#E64646']}
+      colors={["#FFFDFD00", "#FFFDFD00", "#E64646"]}
       locations={[0.09, 0.45, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.inner}>
@@ -93,19 +158,15 @@ const SettingsScreen = () => {
               </View>
             </View>
 
-            <View style={styles.menuList}>
-              {menuItems.map(renderMenuItem)}
-            </View>
+            <View style={styles.menuList}>{menuItems.map(renderMenuItem)}</View>
 
             <Text style={styles.moreHeader}>More</Text>
             <View style={styles.menuList}>
-              {moreItems.map(item => (
+              {moreItems.map((item) => (
                 <TouchableOpacity key={item.id} style={styles.menuItem}>
                   <View style={styles.menuItemContent}>
                     <View style={styles.menuIconContainer}>
-                      <View style={styles.iconBackground}>
-                        {item.icon}
-                      </View>
+                      <View style={styles.iconBackground}>{item.icon}</View>
                     </View>
                     <View style={styles.textContainer}>
                       <Text style={styles.menuTitle}>{item.title}</Text>
@@ -138,92 +199,92 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   backButton: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   header: {
     fontSize: 25,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 10,
   },
   userProfile: {
-    width: '100%',
-    backgroundColor: '#B22222',
-    justifyContent: 'center',
+    width: "100%",
+    backgroundColor: "#B22222",
+    justifyContent: "center",
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 10,
   },
   profileWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 15,
   },
   userImg: {
     width: 60,
     height: 60,
     borderRadius: 50,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
   },
   profileName: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   profileHandle: {
-    color: '#D3D3D3',
+    color: "#D3D3D3",
     fontSize: 10,
   },
   menuList: {
     marginTop: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
   },
   menuItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 15,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
   },
   menuItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 15,
   },
   menuIconContainer: {
     width: 40,
-    alignItems: 'center',
+    alignItems: "center",
   },
   iconBackground: {
     width: 40,
     height: 40,
     borderRadius: 50,
-    backgroundColor: 'lightgrey',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "lightgrey",
+    justifyContent: "center",
+    alignItems: "center",
   },
   textContainer: {
     flexShrink: 1,
   },
   menuTitle: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   menuSubtitle: {
     fontSize: 13,
-    color: 'gray',
+    color: "gray",
   },
   rightContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   alertIcon: {
@@ -231,7 +292,7 @@ const styles = StyleSheet.create({
   },
   moreHeader: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: "600",
     marginTop: 20,
     marginBottom: -10,
   },

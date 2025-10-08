@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Alert, Pressable } from "react-native";
+import { View, Text, TextInput, Alert, Pressable, ActivityIndicator } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
 import Header from "@/components/Header";
 import KeyboardAvoidingWrapper from "@/components/shared/keyboard-avoiding-wrapper";
@@ -7,11 +7,17 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Colors from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import { verifyEmail } from "@/lib/auth/authSlice";
+import Toast from "react-native-toast-message";
 
 export default function VerifyScreen() {
-  const { route } = useLocalSearchParams();
+  const { route, email } = useLocalSearchParams<{ route: string, email: string }>();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.auth);
+
   const intervalRef = useRef<number | null>(null);
   const inputRef = useRef<TextInput[]>([]);
   const [OTP, setOTP] = useState<string[]>(["", "", "", "", "", ""]);
@@ -40,27 +46,41 @@ export default function VerifyScreen() {
     }
   };
 
-  const onComplete = (pin: string) => {
-    const VALID_OTP = "123456";
+  const onComplete = async (pin: string) => {
+    if (!email) {
+      Alert.alert("Missing Email", "Email address is required for verification.");
+      return;
+    }
 
-    if (pin === VALID_OTP) {
-      if (route?.toString() === "forgot-password") {
-        router.push("/auth/reset-password");
-      } else {
+    try {
+      const resultAction = await dispatch(
+        verifyEmail({ email: email, code: pin })
+      );
+
+      if (verifyEmail.fulfilled.match(resultAction)) {
+        Toast.show({
+          type: "success",
+          text1: "Email verified successfully!",
+        });
+
         router.push({
           pathname: "/success",
           params: {
             route: "register",
-            title: "Account Created",
-            info: "Your account has been created successfully",
-            routeName: "Go Home",
+            title: "Email Verified",
+            info: "Your email has been successfully verified.",
+            routeName: "Login",
           },
         });
+      } else {
+        const errorMsg =
+          (resultAction.payload as string) || "Invalid or expired code.";
+        Alert.alert("Verification Failed", errorMsg);
+        setOTP(["", "", "", "", "", ""]);
+        setTimeout(() => inputRef.current[0]?.focus(), 150);
       }
-    } else {
-      Alert.alert("Invalid OTP", "Please try again.");
-      setOTP(["", "", "", ""]);
-      setTimeout(() => inputRef.current[0]?.focus(), 150);
+    } catch (error) {
+      Alert.alert("Error", "Something went wrong. Please try again.");
     }
   };
 
@@ -114,14 +134,14 @@ export default function VerifyScreen() {
               Enter OTP Code
             </Text>
             <Text className="text-wrap text-center text-sm font-poppins">
-              Enter the 4-digit OTP that was sent to{" "}
+              Enter the 6-digit OTP that was sent to{" "}
               <Text className="font-poppins-semibold font-semibold">
-                example@gmail.com
+                {email || "your email"}
               </Text>
             </Text>
 
             <View className="w-full flex-row justify-center mt-4 gap-6">
-              {[0, 1, 2, 3].map((index) => (
+              {[0, 1, 2, 3, 4, 5].map((index) => (
                 <TextInput
                   key={index}
                   style={{
@@ -132,7 +152,7 @@ export default function VerifyScreen() {
                     borderRadius: 10,
                     fontSize: 18,
                   }}
-                  keyboardType="number-pad"
+                  keyboardType="default"
                   maxLength={1}
                   value={OTP[index]}
                   onChangeText={(text) => handleTextChange(text, index)}
@@ -143,16 +163,20 @@ export default function VerifyScreen() {
               ))}
             </View>
 
-            <View className="flex-row items-center justify-center gap-4 mt-4">
-              <Feather
-                name="alert-circle"
-                size={24}
-                color={Colors.colors.red}
-              />
-              <Text className="text-red-500 text-base font-poppins-semibold">
-                OTP expires in <Text>{countSeconds}s</Text>
-              </Text>
-            </View>
+            {isLoading ? (
+              <ActivityIndicator color={Colors.colors.red} size="large" />
+            ) : (
+              <View className="flex-row items-center justify-center gap-4 mt-4">
+                <Feather
+                  name="alert-circle"
+                  size={24}
+                  color={Colors.colors.red}
+                />
+                <Text className="text-red-500 text-base font-poppins-semibold">
+                  OTP expires in <Text>{countSeconds}s</Text>
+                </Text>
+              </View>
+            )}
 
             <View className="flex-row items-center justify-center gap-4">
               <Pressable onPress={resendOtp}>

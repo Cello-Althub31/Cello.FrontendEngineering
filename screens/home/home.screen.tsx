@@ -1,21 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  FlatList,
-  Image,
-  Alert,
-} from "react-native";
+import { View, Text, Pressable, FlatList, Image } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Button from "@/components/ui/Button";
-import { secureStorage } from "@/lib/utils/secureStorage";
 import profileApi from "@/lib/api/profile";
 import axios from "axios";
+import { useAppSelector } from "@/hooks";
 
 export default function HomeScreen() {
+  const { user } = useAppSelector((state) => state.auth);
+  console.log(user)
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const DAY_MS = 24 * 60 * 60 * 1000;
@@ -28,7 +23,9 @@ export default function HomeScreen() {
   }
 
   function formatDayLabel(date: Date) {
-    return date.toLocaleDateString(undefined, { weekday: "short" }).toUpperCase();
+    return date
+      .toLocaleDateString(undefined, { weekday: "short" })
+      .toUpperCase();
   }
 
   function formatMonth(date: Date) {
@@ -38,29 +35,26 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const getUser = async () => {
+      if (!user?._id) {
+        console.log("User ID is undefined, cannot fetch profile.");
+        return;
+      }
       try {
-        const response = await profileApi.getById("68c08d75b24587239f718f9c");
+        const response = await profileApi.getById(user._id);
         console.log("User profile data:", response.data);
       } catch (error: any) {
         if (axios.isAxiosError(error) && error.response) {
-          const apiMessage = error.response.data?.message || "Something went wrong";
-          Alert.alert("Error", apiMessage);
+          const apiMessage =
+            error.response.data?.message || "Something went wrong";
+          console.log("Error", apiMessage);
         } else {
-          Alert.alert("Error", "Unexpected error occurred");
+          console.log("Error", "Unexpected error occurred");
         }
       }
     };
 
     getUser();
   }, []);
-
-  const handleCreateMedication = async () => {
-    router.push({
-      pathname: "/medication-reminder",
-      params: { route: "create-medication" },
-    });
-  };
-
 
   const week = useMemo(() => {
     const start = startOfWeek(selectedDate);
@@ -84,13 +78,13 @@ export default function HomeScreen() {
     <SafeAreaView className="flex-1 bg-white">
       {/* Title + Month */}
       <View className="px-4">
-        <Text className="text-xl font-poppins text-bold text-black">
+        <Text className="text-xl font-poppins font-bold text-black">
           Manage Medication
         </Text>
         <View className="flex-row justify-between py-4 items-center mt-1">
           <Text className="text-lg text-black">Today</Text>
           <Pressable className="flex-row items-center border border-white rounded-full px-3 py-1 space-x-2">
-            <Text className="text-sm text-black">March</Text>
+            <Text className="text-sm text-black">{monthName}</Text>
             <EvilIcons name="calendar" size={16} color="#111" />
           </Pressable>
         </View>
@@ -135,22 +129,20 @@ export default function HomeScreen() {
           className="w-32 h-32 mb-4"
           resizeMode="contain"
         />
-        <Text className="text-grey text-bold text-lg text-center">
+        <Text className="text-grey font-bold text-lg text-center">
           You do not have any medication.
         </Text>
       </View>
 
-      {/* Button */}
+      {/* Button — navigation exactly like WelcomeProfileScreen */}
       <View className="px-6 pt-16 pb-8">
         <Button
-          onPress={handleCreateMedication}
-          className="bg-primary mt-4"
           title="Create Medication"
-          style={{ paddingVertical: 16, borderRadius: 8 }}
+          className="bg-primary rounded-full py-4 px-8"
+          textClassName="text-white text-lg font-semibold"
+          onPress={() => router.push("/medication-intake")}
         />
       </View>
-
-
     </SafeAreaView>
   );
 }
