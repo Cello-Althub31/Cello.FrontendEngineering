@@ -132,7 +132,7 @@ export default function VerifyScreen() {
                     borderRadius: 10,
                     fontSize: 18,
                   }}
-                  keyboardType="number-pad"
+                  keyboardType="default"
                   maxLength={1}
                   value={OTP[index]}
                   onChangeText={(text) => handleTextChange(text, index)}
