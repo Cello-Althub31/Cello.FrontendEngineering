@@ -48,7 +48,7 @@ const JournalEntryScreen = () => {
       const entries = existing ? JSON.parse(existing) : [];
       entries.push(entry);
       await AsyncStorage.setItem("journalEntries", JSON.stringify(entries));
-      // router.push("/journal-dashboard");
+      router.push("/journal-details");
     } catch (error) {
       console.error("Error saving entry:", error);
     }
@@ -61,12 +61,17 @@ const JournalEntryScreen = () => {
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
           <AntDesign name="left-circle" size={28} color="#333" />
         </TouchableOpacity>
 
         <Text style={styles.title}>Today's Journal</Text>
-        <Text style={styles.subHeader}>John, how do you feel this morning?</Text>
+        <Text style={styles.subHeader}>
+          John, how do you feel this morning?
+        </Text>
 
         <View style={styles.moodRow}>
           {moods.map((m) => (
@@ -97,7 +102,10 @@ const JournalEntryScreen = () => {
 
         <View style={styles.formContainer}>
           <View style={styles.formSection}>
-            <TextInput style={styles.input} placeholder="Medication used (if any)" />
+            <TextInput
+              style={styles.input}
+              placeholder="Medication used (if any)"
+            />
           </View>
 
           <View style={styles.formSection}>
@@ -111,15 +119,23 @@ const JournalEntryScreen = () => {
                 inputAndroid: styles.dropdownText,
                 iconContainer: { top: 10, right: 12 },
               }}
-              Icon={() => <Ionicons name="chevron-down" size={20} color="#888" />}
+              Icon={() => (
+                <Ionicons name="chevron-down" size={20} color="#888" />
+              )}
             />
           </View>
         </View>
 
         <Text style={styles.label}>Time</Text>
-        <TouchableOpacity style={styles.timePicker} onPress={() => setShowPicker(true)}>
+        <TouchableOpacity
+          style={styles.timePicker}
+          onPress={() => setShowPicker(true)}
+        >
           <Text style={styles.timeText}>
-            {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            {time.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </Text>
         </TouchableOpacity>
 
@@ -135,7 +151,11 @@ const JournalEntryScreen = () => {
           />
         )}
 
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <TouchableOpacity
+          style={[styles.saveButton, !selectedDate && styles.disabledButton]}
+          onPress={handleSave}
+          disabled={!selectedDate}
+        >
           <Text style={styles.saveText}>Save</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -148,44 +168,45 @@ export default JournalEntryScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
   scrollContent: {
-    padding: 24
+    padding: 24,
   },
   backButton: {
     alignSelf: "flex-start",
-    marginBottom: 10
+    marginTop: 40,
+    marginBottom: 10,
   },
   title: {
     fontSize: 22,
     fontWeight: "600",
     textAlign: "center",
     marginBottom: 10,
-    color: "#333"
+    color: "#333",
   },
   subHeader: {
     fontSize: 16,
     textAlign: "center",
     marginBottom: 20,
-    color: "#666"
+    color: "#666",
   },
   moodRow: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginBottom: 30
+    marginBottom: 30,
   },
   moodIcon: {
     padding: 10,
     borderRadius: 10,
-    backgroundColor: "#f2f2f2"
+    backgroundColor: "#f2f2f2",
   },
   selectedMood: {
-    backgroundColor: "#C86969"
+    backgroundColor: "#C86969",
   },
   moodText: {
     fontSize: 28,
-    textAlign: "center"
+    textAlign: "center",
   },
   input: {
     borderWidth: 1,
@@ -197,18 +218,18 @@ const styles = StyleSheet.create({
   },
   description: {
     height: 120,
-    textAlignVertical: "top"
+    textAlignVertical: "top",
   },
   formContainer: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   formSection: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: "#333"
+    color: "#333",
   },
   dropdownText: {
     fontSize: 16,
@@ -236,9 +257,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
   },
+  disabledButton: {
+    backgroundColor: "#B22222",
+  },
   saveText: {
     color: "#fff",
     fontSize: 18,
-    fontWeight: "600"
+    fontWeight: "600",
   },
 });

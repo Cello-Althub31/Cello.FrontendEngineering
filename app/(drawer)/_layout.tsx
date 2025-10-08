@@ -28,20 +28,6 @@ export default function DrawerLayout() {
       }}
     >
       <Drawer.Screen
-        name="home/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="home-outline" size={size} color={color} />
-              <Text>Home</Text>
-            </View>
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="medication-reminder/index"
         options={{
           title: "",
@@ -55,6 +41,8 @@ export default function DrawerLayout() {
           ),
         }}
       />
+    
+      
        <Drawer.Screen
         name="profile/index"
         options={{
@@ -69,7 +57,57 @@ export default function DrawerLayout() {
           ),
         }}
       />
+      <Drawer.Screen
+  name="wellbeing-calendar/index"
+  options={{
+    title: "",
+    drawerIcon: ({ color, size }) => (
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        <Ionicons name="calendar-outline" size={size} color={color} />
+        <Text>Wellbeing Calendar</Text>
+      </View>
+    ),
+  }}
+/>
     
+
+<Drawer.Screen
+  name="journal/index"
+  options={{
+    title: "",
+    drawerIcon: ({ color, size }) => (
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        <Ionicons name="book-outline" size={size} color={color} />
+        <Text>Journal</Text>
+      </View>
+    ),
+  }}
+/>
+
+<Drawer.Screen
+  name="history/index"
+  options={{
+    title: "",
+    drawerIcon: ({ color, size }) => (
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        <Ionicons name="time-outline" size={size} color={color} />
+        <Text>History</Text>
+      </View>
+    ),
+  }}
+/>
+<Drawer.Screen
+  name="notifications/index"
+  options={{
+    title: "",
+    drawerIcon: ({ color, size }) => (
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        <Ionicons name="notifications-outline" size={size} color={color} />
+        <Text>Notifications</Text>
+      </View>
+    ),
+  }}
+/>
 <Drawer.Screen
   name="settings/index"
   options={{
@@ -82,8 +120,7 @@ export default function DrawerLayout() {
     ),
   }}
 />
-
-      {/* Add more drawer screens here */}
     </Drawer>
   );
 }
+

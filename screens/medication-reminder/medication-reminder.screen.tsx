@@ -80,6 +80,7 @@ const MedicationReminderScreen = () => {
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
+          
           <View style={styles.inner}>
             <TouchableOpacity onPress={handleGoBack}>
               <AntDesign name="left-circle" size={30} color="black" />
