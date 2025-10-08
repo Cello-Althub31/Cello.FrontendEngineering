@@ -136,7 +136,7 @@ export default function HomeScreen() {
           title="Create Medication"
           className="bg-primary rounded-full py-4 px-8"
           textClassName="text-white text-lg font-semibold"
-          onPress={() => router.push("/../screens/medication-intakes/medication-intakes")}
+          onPress={() => router.push("/")}
         />
       </View>
     </SafeAreaView>

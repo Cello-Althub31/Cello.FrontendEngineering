@@ -87,7 +87,7 @@ const AddNewContact = () => {
     useState(false);
   const [isConsentModalVisible, setIsConsentModalVisible] = useState(false);
 
-  const relationships = ["Father", "Mother", "Sibling", "Friend", "Other"];
+  const relationships = ["Father", "Mother", "brother", "sister", "Friend", "Other"];
 
   const handleNext = async () => {
     if (!fullName || !phoneNumber || !emailAddress || !relationship) {
