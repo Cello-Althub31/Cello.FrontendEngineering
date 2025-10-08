@@ -6,8 +6,11 @@ import { useRouter } from "expo-router";
 import Button from "@/components/ui/Button";
 import profileApi from "@/lib/api/profile";
 import axios from "axios";
+import { useAppSelector } from "@/hooks";
 
 export default function HomeScreen() {
+  const { user } = useAppSelector((state) => state.auth);
+  console.log(user)
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const DAY_MS = 24 * 60 * 60 * 1000;
@@ -32,8 +35,12 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const getUser = async () => {
+      if (!user?._id) {
+        console.log("User ID is undefined, cannot fetch profile.");
+        return;
+      }
       try {
-        const response = await profileApi.getById("68d2cf147e02163afb512c78");
+        const response = await profileApi.getById(user._id);
         console.log("User profile data:", response.data);
       } catch (error: any) {
         if (axios.isAxiosError(error) && error.response) {
@@ -95,21 +102,18 @@ export default function HomeScreen() {
           return (
             <Pressable
               onPress={() => setSelectedDate(item.date)}
-              className={`w-14 h-14 items-center rounded-xl border mx-1 py-2 ${
-                active ? "border-primary" : "border-white"
-              }`}
+              className={`w-14 h-14 items-center rounded-xl border mx-1 py-2 ${active ? "border-primary" : "border-white"
+                }`}
             >
               <Text
-                className={`text-base font-semibold ${
-                  active ? "text-primary" : "text-black"
-                }`}
+                className={`text-base font-semibold ${active ? "text-primary" : "text-black"
+                  }`}
               >
                 {item.dayNum}
               </Text>
               <Text
-                className={`text-[11px] mt-1 ${
-                  active ? "text-primary font-bold" : "text-grey"
-                }`}
+                className={`text-[11px] mt-1 ${active ? "text-primary font-bold" : "text-grey"
+                  }`}
               >
                 {item.label}
               </Text>
@@ -136,7 +140,7 @@ export default function HomeScreen() {
           title="Create Medication"
           className="bg-primary rounded-full py-4 px-8"
           textClassName="text-white text-lg font-semibold"
-          onPress={() => router.push("/(drawer)/medication-intakes/medication-intakes")}
+          onPress={() => router.push("/medication-intake")}
         />
       </View>
     </SafeAreaView>

@@ -5,7 +5,9 @@ const TOKEN_KEY = "auth_token";
 const USER_KEY = "user_info";
 
 export const secureStorage = {
-  async storeTokens(tokens: AuthTokens) {
+  async storeTokens(tokens: AuthTokens | null | undefined) {
+    console.log("storing token", tokens)
+    if (!tokens) return;
     await SecureStore.setItemAsync(TOKEN_KEY, JSON.stringify(tokens));
   },
 

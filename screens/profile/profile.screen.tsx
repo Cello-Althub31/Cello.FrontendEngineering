@@ -86,7 +86,7 @@ const StatusModal = ({
 
 const ProfileScreen = () => {
   const user = useSelector((state: RootState) => state.auth.user);
-  console.log({ user })
+  // console.log({ user })
   const [fullName, setFullName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [showDateOfBirthPicker, setShowDateOfBirthPicker] = useState(false);

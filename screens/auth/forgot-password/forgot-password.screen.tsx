@@ -4,18 +4,46 @@ import KeyboardAvoidingWrapper from "@/components/shared/keyboard-avoiding-wrapp
 import Button from "@/components/ui/Button";
 import TextInputWithLabel from "@/components/ui/TextInputWithLabel";
 import { useRouter } from "expo-router";
-import { View, Text } from "react-native";
+import { useState } from "react";
+import { View, Text, Alert, ActivityIndicator } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import { forgotPassword } from "@/lib/auth/authSlice";
+import Toast from "react-native-toast-message";
 
 export default function ForgotPasswordScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.auth);
+  const [email, setEmail] = useState("");
 
   const handleForgotPassword = async () => {
-    router.push({
-      pathname: "/auth/verify",
-      params: { route: "forgot-password" },
-    });
+    if (!email.trim()) {
+      Alert.alert("Email required", "Please enter your email address.");
+      return;
+    }
+
+    try {
+      await dispatch(forgotPassword({ email })).unwrap();
+
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Password reset email sent successfully.",
+      });
+
+      router.push({
+        pathname: "/auth/verify",
+        params: { route: "forgot-password", email },
+      });
+    } catch (error: any) {
+      let message = "Something went wrong.";
+      if (typeof error === "string") message = error;
+      else if (error?.message) message = error.message;
+
+      Alert.alert("Error", message);
+    }
   };
 
   return (
@@ -37,19 +65,22 @@ export default function ForgotPasswordScreen() {
             props={{
               label: "Email address",
               placeholder: "Enter your email address here",
-              keyboardType: "ascii-capable",
+              keyboardType: "email-address",
+              value: email,
+              onChangeText: setEmail,
               labelFontFamily: "poppins-medium",
               labelFontSize: 14,
               labelErrorColor: "#EF4444",
-              onChangeText: (text) => console.log(text),
             }}
           />
 
           <Button
             onPress={handleForgotPassword}
-            className="bg-primary mt-4"
-            title="Send code"
+            disabled={isLoading}
+            className={`mt-4 ${isLoading ? "opacity-70" : "bg-primary"}`}
+            title={isLoading ? "Sending..." : "Send code"}
             style={{ paddingVertical: 16, borderRadius: 8 }}
+            loading={isLoading}
           />
         </View>
       </GradientBackground>

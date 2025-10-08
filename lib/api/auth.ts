@@ -8,13 +8,14 @@ import {
   SignUpRequest,
   VerifyEmailRequest,
 } from "@/types/auth";
+import apiClient from "../utils/apiClient";
 
 const authApi = {
   signup: (data: SignUpRequest) => axios.post(`${API_URI}/auth/signup`, data),
 
   login: (data: LoginRequest) => axios.post(`${API_URI}/auth/login`, data),
 
-  loggedInUser: () => axios.get(`${API_URI}/auth/me`),
+  loggedInUser: () => apiClient.get(`${API_URI}/auth/me`),
 
   verifyEmail: (data: VerifyEmailRequest) =>
     axios.post(`${API_URI}/auth/verifyEmail`, data),
