@@ -96,7 +96,7 @@ const AddNewContact = () => {
     }
 
     try {
-      const res = await emergencyContactApi.createEmergencyContact({
+      const res = await emergencyContactApi.create({
         fullName,
         phoneNumber,
         emailAddress,

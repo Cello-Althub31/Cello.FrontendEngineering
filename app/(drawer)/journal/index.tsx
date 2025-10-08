@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import Journal from "@/screens/journal/journal.Screen";
+import Journal from "@/screens/journal/folder.screen";
 import Drawer from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 

@@ -1,9 +1,15 @@
 interface CreateProfileRequest {
   fullName: string;
-  dateOfBirth: string; 
+  dateOfBirth: string;
   gender: string;
   genotype: string;
   diagnosis: string;
+}
+
+interface IProfilePatch {
+  name: string;
+  bio: string;
+  location: string;
 }
 interface MenuItemProps {
   id: string;
@@ -19,7 +25,7 @@ interface createMedicationReminderRequest {
   dosage: string;
   frequency: string;
   times: string[];
-  notificationSettings: {"snoozeMinutes": number};
+  notificationSettings: { "snoozeMinutes": number };
 }
 interface createHydrationReminderRequest {
   targetLiters: number;
@@ -30,12 +36,27 @@ interface createDoctorAppointmentRequest {
   dateTime: string; // ISO string
   hospitalName: string;
   doctorName: string;
-  
-  
+
+
 }
 interface createEmergencyContactRequest {
   fullName: string;
   emailAddress: string;
   phoneNumber: string;
   relationship: string;
+}
+
+interface IJournalEntry {
+  folderId: string;
+  entryDate: string;
+  feeling: string;
+  title: string;
+  description: string;
+  timeOfDay: string;
+}
+
+interface IJournalPatch {
+  feeling: string,
+  title: string,
+  description: string
 }
