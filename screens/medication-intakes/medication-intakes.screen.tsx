@@ -108,7 +108,7 @@ export default function MedicationIntakesScreen() {
       <View className="flex items-center justify-center mt-8">
         <View className="w-40 h-40 rounded-full bg-pink-100 items-center justify-center">
           <Image
-            source={require("@/assets/icons/pill.png")} // replace with your pill icon
+            source={require("@/assets/icons/pill.png")} 
             className="w-6 h-6 mb-1"
             resizeMode="contain"
           />

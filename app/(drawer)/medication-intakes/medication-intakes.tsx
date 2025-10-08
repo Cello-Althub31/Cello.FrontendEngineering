@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import Journal from "@/screens/journal/journal.Screen";
+import MedicationIntakes from "@/screens/medication-intakes/medication-intakes.screen";
 import Drawer from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 
@@ -7,7 +7,7 @@ const MedicationIntakesScreen = () => {
   return (
     <>
       <Drawer.Screen />
-      <MedicationIntakesScreen />
+      <MedicationIntakes />
       <StatusBar style="dark" />
     </>
   );
