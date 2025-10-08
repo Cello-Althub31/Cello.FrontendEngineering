@@ -1,7 +1,6 @@
-import { StyleSheet } from "react-native";
-import JournalEntryScreen from "@/screens/journal/entry.screen";
 import Drawer from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
+import DashboardScreen from "@/screens/journal/dashboard.screen";
 
 const JournalEntry = () => {
   return (
@@ -11,12 +10,10 @@ const JournalEntry = () => {
           headerShown: false,
         }}
       />
-      <JournalEntryScreen />
+      <DashboardScreen />
       <StatusBar style="dark" />
     </>
   );
 };
 
 export default JournalEntry;
-
-const styles = StyleSheet.create({})

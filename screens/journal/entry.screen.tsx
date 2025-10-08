@@ -8,14 +8,25 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, router } from "expo-router";
+import journalApi from "@/lib/api/journals";
+import axios from "axios";
+import { ActivityIndicator } from "react-native";
 
-const moods = ["😁", "🙂", "😐", "😢", "😠"];
+const moods = [
+  { name: "Indifferent", emoji: "😑" },
+  { name: "Happy", emoji: "😁" },
+  { name: "Sad", emoji: "😢" },
+  { name: "Shocked", emoji: "😳" },
+  { name: "Frustrated", emoji: "😩" },
+  { name: "Overwhelmed", emoji: "😰" },
+  { name: "Sick", emoji: "🤢" }
+];
 const frequencyOptions = [
   { label: "Once", value: "once" },
   { label: "Twice", value: "twice" },
@@ -25,7 +36,8 @@ const frequencyOptions = [
 const placeholder = { label: "Select frequency", value: null };
 
 const JournalEntryScreen = () => {
-  const { selectedDate } = useLocalSearchParams();
+  const [loading, setLoading] = useState(false);
+  const { folderId, selectedDate } = useLocalSearchParams<{ folderId: string, selectedDate: string }>();
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
   const [time, setTime] = useState(new Date());
@@ -34,23 +46,45 @@ const JournalEntryScreen = () => {
   const [frequency, setFrequency] = useState("");
 
   const handleSave = async () => {
-    const entry = {
-      date: selectedDate,
-      time: time.toLocaleTimeString(),
-      title,
-      note,
-      mood,
-      frequency,
+    if (!title.trim() || !note.trim()) {
+      Alert.alert("Missing Fields", "Please enter a title and a note before saving.");
+      return;
+    }
+
+    const entry: IJournalEntry = {
+      folderId,
+      entryDate: selectedDate,
+      timeOfDay: time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      title: title.trim(),
+      description: note.trim(),
+      feeling: mood,
     };
 
     try {
-      const existing = await AsyncStorage.getItem("journalEntries");
-      const entries = existing ? JSON.parse(existing) : [];
-      entries.push(entry);
-      await AsyncStorage.setItem("journalEntries", JSON.stringify(entries));
-      // router.push("/journal-dashboard");
+      setLoading(true);
+
+      const response = await journalApi.createJournal(entry);
+      const data = response.data?.data;
+
+      if (response.data?.success) {
+        console.log("Journal created successfully:", data);
+        Alert.alert("Success", "Journal entry created successfully!");
+        router.push({
+          pathname: "/journal-dashboard",
+          params: { folderId: data.folderId, journalId: data._id },
+        });
+      } else {
+        Alert.alert("Error", response.data?.message || "Failed to create journal entry");
+      }
     } catch (error) {
       console.error("Error saving entry:", error);
+      if (axios.isAxiosError(error)) {
+        Alert.alert("Error", error.response?.data?.message || "Request failed");
+      } else {
+        Alert.alert("Error", "Something went wrong while saving your journal entry");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,11 +105,11 @@ const JournalEntryScreen = () => {
         <View style={styles.moodRow}>
           {moods.map((m) => (
             <TouchableOpacity
-              key={m}
-              onPress={() => setMood(m)}
-              style={[styles.moodIcon, mood === m && styles.selectedMood]}
+              key={m.name}
+              onPress={() => setMood(m.name)}
+              style={[styles.moodIcon, mood === m.name && styles.selectedMood]}
             >
-              <Text style={styles.moodText}>{m}</Text>
+              <Text style={styles.moodText}>{m.emoji}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -136,7 +170,14 @@ const JournalEntryScreen = () => {
         )}
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveText}>Save</Text>
+          {loading ? (
+            <View className='flex flex-row'>
+              <ActivityIndicator color="#fff" />
+              <Text className='ml-2 text-white'>Saving...</Text>
+            </View>
+          ) : (
+            <Text style={styles.saveText}>Save</Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>

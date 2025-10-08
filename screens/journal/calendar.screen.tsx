@@ -11,9 +11,10 @@ import {
 import { Calendar, DateData } from "react-native-calendars";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 const JournalCalendar = () => {
+  const { folderId } = useLocalSearchParams<{ folderId: string }>();
   const [selectedDate, setSelectedDate] = useState("");
 
   const onDayPress = (day: DateData) => {
@@ -28,7 +29,7 @@ const JournalCalendar = () => {
     if (selectedDate) {
       router.push({
         pathname: "/journal-entry",
-        params: { selectedDate },
+        params: { folderId, selectedDate },
       });
     }
   };

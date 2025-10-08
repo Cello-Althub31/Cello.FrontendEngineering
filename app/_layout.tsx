@@ -15,6 +15,7 @@ import { useColorScheme } from "nativewind";
 import { reduxStore } from "@/lib/store/reduxStore";
 import { useAppSelector, useAppDispatch } from "@/hooks";
 import { rehydrateAuth } from "@/lib/auth/authSlice";
+import Toast from "react-native-toast-message";
 
 
 
@@ -76,7 +77,7 @@ function RootLayoutNav() {
           <Stack.Screen name="(routes)" />
         )}
       </Stack>
-
+      <Toast />
     </>
   );
 }

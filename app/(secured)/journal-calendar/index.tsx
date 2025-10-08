@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import JournalCalendar from "@/screens/journal-calendar/calendar.screen";
+import JournalCalendar from "@/screens/journal/calendar.screen";
 import Drawer from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 

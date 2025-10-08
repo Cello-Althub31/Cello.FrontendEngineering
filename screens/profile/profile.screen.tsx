@@ -176,9 +176,9 @@ const ProfileScreen = () => {
       return;
     }
     console.log('Submitting profile with data:', { fullName, dateOfBirth, gender, genotype, diagnosis });
-    return
+    // return
     try {
-      const response = await profileApi.createProfile({
+      const response = await profileApi.create({
         fullName,
         dateOfBirth: dateOfBirth.toISOString().split('T')[0],
         gender,
