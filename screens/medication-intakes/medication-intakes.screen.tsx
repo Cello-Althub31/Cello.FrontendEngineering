@@ -2,8 +2,13 @@ import React, { useMemo, useState } from "react";
 import { View, Text, Pressable, FlatList, Image } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import GradientBackground from "@/components/shared/gradient-bg";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 export default function MedicationIntakesScreen() {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -54,10 +59,11 @@ export default function MedicationIntakesScreen() {
   ];
 
   return (
+        <GradientBackground colors={["#FFFFFF", "#F3AAAA"]}>
     <SafeAreaView className="flex-1 bg-white">
       {/* Title + Month */}
-      <View className="px-4">
-        <Text className="text-xl font-poppins text-bold text-black">
+      <View className="px-4 pb-6">
+        <Text className="text-2xl font-poppins text-black">
           Manage Medication
         </Text>
         <View className="flex-row justify-between py-4 items-center mt-1">
@@ -105,36 +111,44 @@ export default function MedicationIntakesScreen() {
       />
 
       {/* Intakes summary circle */}
-      <View className="flex items-center justify-center mt-8">
-        <View className="w-40 h-40 rounded-full bg-pink-100 items-center justify-center">
+      <View className="flex items-center justify-center mt-0 pb-12">
+        <Text className="text-2xl font-bold text-red-700 mt-6">Intakes</Text>
+        <View className="w-60 h-60 rounded-full bg-pink-200 items-center justify-center">
           <Image
-            source={require("@/assets/icons/pill.png")} 
+            source={require("@/assets/icons/pill2.png")}
             className="w-6 h-6 mb-1"
             resizeMode="contain"
           />
-          <Text className="text-red-600 text-2xl font-bold">0/2</Text>
+          <Text className="text-red-700 text-6xl font-bold">0/2</Text>
           <Text className="text-sm text-grey">Wednesday</Text>
         </View>
-        <Text className="text-xl font-bold text-red-600 mt-6">Intakes</Text>
+       
       </View>
 
       {/* Intake list */}
-      <View className="px-4 mt-8 space-y-3">
+      <View className="px-4 mt-8 space-y-32 pb-16">
         {intakes.map((item) => (
-          <View
+          <Pressable
             key={item.id}
-            className="flex-row justify-between items-center bg-white shadow-sm rounded-xl border px-4 py-3"
+            onPress={() =>
+              router.push({
+                pathname: "/(secured)/medication-details",
+                params: { id: item.id },
+              })
+            }
+            className="flex-row justify-between items-center bg-white shadow-sm rounded-xl border-separate px-4 py-4"
           >
             <View>
               <Text className="text-black font-semibold">{item.name}</Text>
               <Text className="text-grey text-sm">{item.dosage}</Text>
             </View>
-            <View className="bg-red-600 px-3 py-1 rounded-md">
+            <View className="bg-red-700 px-3 py-1 rounded-md">
               <Text className="text-white text-sm font-bold">{item.time}</Text>
             </View>
-          </View>
+          </Pressable>
         ))}
       </View>
     </SafeAreaView>
+    </GradientBackground>
   );
 }
