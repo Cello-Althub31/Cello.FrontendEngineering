@@ -4,21 +4,21 @@ import { router } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 
 const JournalDeleteScreen = () => {
-  
+
   return (
     <View style={styles.wrapper}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <AntDesign name="leftcircle" size={28} color="#333" />
+        <AntDesign name="left-circle" size={28} color="#333" />
       </TouchableOpacity>
 
-    <View style={styles.container}>
-      <Image source={require('@/assets/icons/journalHero.png')} style={styles.image} />
-      <Text style={styles.message}>You sure</Text>
-      <Text style={styles.message}>about this?</Text>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/')}>
-        <Text style={styles.buttonText}>Deleted</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.container}>
+        <Image source={require('@/assets/icons/journalHero.png')} style={styles.image} />
+        <Text style={styles.message}>You sure</Text>
+        <Text style={styles.message}>about this?</Text>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/')}>
+          <Text style={styles.buttonText}>Deleted</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
