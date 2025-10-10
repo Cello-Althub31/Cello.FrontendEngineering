@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Button,
+  Alert,
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import AntDesign from '@expo/vector-icons/AntDesign'
@@ -86,7 +87,7 @@ const StatusModal = ({
 
 const ProfileScreen = () => {
   const user = useSelector((state: RootState) => state.auth.user);
-  // console.log({ user })
+  console.log({ user })
   const [fullName, setFullName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [showDateOfBirthPicker, setShowDateOfBirthPicker] = useState(false);
@@ -119,7 +120,7 @@ const ProfileScreen = () => {
         if (axios.isAxiosError(error) && error.response) {
           const apiMessage = error.response.data?.message || "Something went wrong";
           console.log("Error", apiMessage);
-          // Alert.alert("Error", apiMessage);
+          Alert.alert("Error", apiMessage);
         } else {
           console.log("Error", "Unexpected error occurred");
           // Alert.alert("Error", "Unexpected error occurred");

@@ -3,7 +3,7 @@ import Toast from "react-native-toast-message";
 import { secureStorage } from "@/lib/utils/secureStorage";
 import { reduxStore } from "@/lib/store/reduxStore";
 import { API_URI } from "@/lib/utils/uri";
-import { logout } from "../auth/authSlice";
+import { logout } from "@/lib/auth/authSlice";
 import { router } from "expo-router";
 
 const apiClient = axios.create({
