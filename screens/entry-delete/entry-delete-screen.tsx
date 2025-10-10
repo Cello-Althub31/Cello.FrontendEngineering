@@ -11,7 +11,7 @@ const EntryDeleteScreen = () => {
   return (
     <View style={styles.wrapper}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <AntDesign name="leftcircle" size={28} color="#333" />
+        <AntDesign name="left-circle" size={28} color="#333" />
       </TouchableOpacity>
 
       <View style={styles.container}>
