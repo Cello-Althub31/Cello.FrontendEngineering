@@ -7,11 +7,7 @@ import HomeScreen from '@/screens/home/home.screen';
 const ActiveReminder = () => {
   return (
     <>
-      <Drawer.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Drawer.Screen />
       <HomeScreen />
       <StatusBar style="dark" />
     </>

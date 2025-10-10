@@ -19,9 +19,7 @@ export default function DrawerLayout() {
         headerRight: () => (
           <View style={{ flexDirection: "row", gap: 16, marginRight: 12 }}>
             {/* Notifications */}
-            <TouchableOpacity
-              onPress={() => {}}
-            >
+            <TouchableOpacity onPress={() => {}}>
               <Ionicons name="notifications-outline" size={24} color="#000" />
             </TouchableOpacity>
 
@@ -45,8 +43,8 @@ export default function DrawerLayout() {
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
             >
-              <Ionicons name="home-outline" size={size} color={color} />
-              <Text>Home</Text>
+              <MaterialCommunityIcons name="pill-multiple" size={size} color="red" />
+              <Text>Manage Medication</Text>
             </View>
           ),
         }}
@@ -65,7 +63,7 @@ export default function DrawerLayout() {
           ),
         }}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         name="profile/index"
         options={{
           title: "",
@@ -79,19 +77,36 @@ export default function DrawerLayout() {
           ),
         }}
       />
-    
-<Drawer.Screen
-  name="settings/index"
-  options={{
-    title: "",
-    drawerIcon: ({ color, size }) => (
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-        <Ionicons name="settings-outline" size={size} color={color} />
-        <Text>Settings</Text>
-      </View>
-    ),
-  }}
-/>
+
+      <Drawer.Screen
+        name="settings/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <Ionicons name="settings-outline" size={size} color="red" />
+              <Text>Settings</Text>
+            </View>
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="journal/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <MaterialCommunityIcons name="notebook-edit" size={size} color="red" />
+              <Text>Journal</Text>
+            </View>
+          ),
+        }}
+      />
+      
 
       {/* Add more drawer screens here */}
     </Drawer>
