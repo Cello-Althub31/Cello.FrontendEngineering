@@ -2,7 +2,7 @@ import apiClient from "@/lib/utils/apiClient";
 
 
 const profileApi = {
-  getById: (id: string) => apiClient.get(`/profile/user/${id}`),
+  getById: () => apiClient.get(`/profile`),
 
   create: (data: CreateProfileRequest) =>
     apiClient.post(`/profile`, data),

@@ -113,7 +113,7 @@ const ProfileScreen = () => {
         return;
       }
       try {
-        const response = await profileApi.getById(user._id);
+        const response = await profileApi.getById();
         console.log("User profile:", response.data);
       } catch (error: any) {
         console.log(error)

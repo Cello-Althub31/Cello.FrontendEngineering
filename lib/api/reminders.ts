@@ -10,8 +10,8 @@ const remindersApi = {
   hydrationReminder: (data: createHydrationReminderRequest) =>
     apiClient.post(`/reminder`, data),
 
-  doctorAppointmentReminder: (data: createDoctorAppointmentRequest) =>
-    apiClient.post(`/reminder`, data),
+  doctorAppointmentReminder: (data: any) =>
+    apiClient.post(`/appointments`, data),
 };
 
 export default remindersApi;

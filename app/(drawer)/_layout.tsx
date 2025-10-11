@@ -83,7 +83,7 @@ export default function DrawerLayout() {
         headerRight: () => (
           <View style={{ flexDirection: "row", gap: 16, marginRight: 12 }}>
             {/* Notifications */}
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => { }}>
               <Ionicons name="notifications-outline" size={24} color="#000" />
             </TouchableOpacity>
 
@@ -93,7 +93,7 @@ export default function DrawerLayout() {
             </TouchableOpacity>
 
             {/* Emergency */}
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => { }}>
               <AntDesign name="alert" size={26} color="red" />
             </TouchableOpacity>
           </View>
