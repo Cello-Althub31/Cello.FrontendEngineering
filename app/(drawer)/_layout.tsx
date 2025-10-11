@@ -167,20 +167,7 @@ export default function DrawerLayout() {
           ),
         }}
       />
-      <Drawer.Screen
-        name="notifications/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <MaterialIcons name="notifications" size={size} color="red" />
-              <Text>Notifications</Text>
-            </View>
-          ),
-        }}
-      />
+      
 
       <Drawer.Screen
         name="settings/index"
