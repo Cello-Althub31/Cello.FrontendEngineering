@@ -76,7 +76,7 @@ const AboutAppScreen = () => {
           <View style={styles.inner}>
             <View style={styles.header}>
               <TouchableOpacity onPress={handleGoBack}>
-                <AntDesign name="left" size={24} color="black" />
+                <AntDesign name="left-circle" size={30} color="black" />
               </TouchableOpacity>
               <Text style={styles.headerTitle}>About App</Text>
               <View style={{ width: 24 }} />
@@ -144,7 +144,7 @@ export default AboutAppScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 60,
   },
   scrollContent: {
     flexGrow: 1,
@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
+    fontSize: 28,
+    fontWeight: "700",
     color: "black",
   },
   logoSection: {
