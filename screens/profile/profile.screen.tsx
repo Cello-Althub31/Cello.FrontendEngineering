@@ -112,24 +112,38 @@ const ProfileScreen = () => {
         console.log("User ID is undefined, cannot fetch profile.");
         return;
       }
+
       try {
         const response = await profileApi.getById();
         console.log("User profile:", response.data);
+
+        if (response.data?.data) {
+          const userProfile = response.data.data;
+
+          setFullName(userProfile.fullName || "");
+          setGender(userProfile.gender || "");
+          setGenotype(userProfile.genotype || "");
+          setDiagnosis(userProfile.diagnosis || "");
+          setDateOfBirth(
+            userProfile.dateOfBirth
+              ? new Date(userProfile.dateOfBirth)
+              : new Date()
+          );
+        }
       } catch (error: any) {
-        console.log(error)
+        console.error("Profile fetch error:", error);
+
         if (axios.isAxiosError(error) && error.response) {
           const apiMessage = error.response.data?.message || "Something went wrong";
-          console.log("Error", apiMessage);
           Alert.alert("Error", apiMessage);
         } else {
-          console.log("Error", "Unexpected error occurred");
-          // Alert.alert("Error", "Unexpected error occurred");
+          Alert.alert("Error", "Unexpected error occurred");
         }
       }
     };
 
     getUser();
-  }, []);
+  }, [user?._id]);
 
   interface OnChangeDateOfBirthEvent {
     type: string;
