@@ -106,7 +106,19 @@ export default function DrawerLayout() {
           ),
         }}
       />
-      
+      <Drawer.Screen
+        name="history-tracker/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+              <MaterialIcons name="history" size={size} color="red" />
+              <Text>History Tracker</Text>
+            </View>
+          ),
+        }}
+      />
 
       {/* Add more drawer screens here */}
     </Drawer>
