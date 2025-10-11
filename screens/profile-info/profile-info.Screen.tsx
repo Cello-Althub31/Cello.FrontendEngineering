@@ -30,7 +30,7 @@ export default function ProfileScreen() {
   });
 
   const handleEditProfile = () => {
-    router.push("/profile");
+    router.push("./profile-edit");
   };
 
   return (
@@ -48,11 +48,13 @@ export default function ProfileScreen() {
       <View style={styles.profileImageContainer}>
         <View>
           <Image
-            source={require("../../assets/images/profile.png")}
+            source={require("@/assets/images/profile.png")}
             style={styles.profileImage}
           />
-          {/* Red status indicator */}
-          <View style={styles.statusIndicator} />
+          <Image
+                    source={require("@/assets/icons/edit.png")}
+                    style={styles.editIcon}
+                  />
         </View>
         <Text style={styles.userName}>{userProfile.name}</Text>
         <Text style={styles.userRole}>{userProfile.role}</Text>
@@ -131,6 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 16,
+    marginTop: 40,
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
@@ -151,16 +154,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0d9f8",
     marginBottom: 12,
   },
-  statusIndicator: {
-    position: "absolute",
-    bottom: 10,
-    right: 0,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#dc2626",
-    borderWidth: 3,
-    borderColor: "#fff",
+  editIcon: {
+    bottom: 30,
+    left: 70,
   },
   userName: {
     fontSize: 20,
