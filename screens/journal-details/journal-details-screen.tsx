@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,49 +9,79 @@ import {
   ScrollView,
   Image,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, usePathname } from "expo-router";
+import journalApi from "@/lib/api/journals";
 
-type JournalDetailScreenProps = {
-  onNavigate: (action: string, folderId: number) => void;
+type Folder = {
+  _id: string;
+  type: string;
+  lastEdited?: string;
+  icon?: any;
 };
 
-const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({
-  onNavigate,
-}) => {
-  const [searchText, setSearchText] = React.useState("");
-  
-  const folders = [
-    {
-      id: 1,
-      title: "My Journal",
-      lastEdited: "Last Edited 29th July",
-      icon: require("@/assets/icons/journal.png"),
-    },
-    {
-      id: 2,
-      title: "Quick Notes",
-      lastEdited: "Last Edited 10th July",
-      icon: require("@/assets/icons/notes.png"),
-    },
-    {
-      id: 3,
-      title: "Goals-Settings",
-      lastEdited: "Last Edited 10th July",
-      icon: require("@/assets/icons/goals.png"),
-    },
-    {
-      id: 4,
-      title: "Questionaires",
-      lastEdited: "Last Edited 10th December 2024",
-      icon: require("@/assets/icons/questionnaire.png"),
-    },
-  ];
+const JournalDetailScreen = () => {
+  const [searchText, setSearchText] = useState("");
+  const [folders, setFolders] = useState<Folder[]>([]);
+  const [filteredFolders, setFilteredFolders] = useState<Folder[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const path = usePathname();
+  console.log("Current path:", path);
 
-  const filteredFolders = folders.filter((folder) =>
-    folder.title.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const fetchFolders = async () => {
+    try {
+      setLoading(true);
+      const response = await journalApi.allFolders();
+      console.log(response.data)
+      const data = response.data?.data || [];
+      setFolders(data);
+      setFilteredFolders(data);
+    } catch (err: any) {
+      console.error("Error fetching folders:", err);
+      setError("Failed to load folders. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFolders();
+  }, []);
+
+
+  useEffect(() => {
+    if (searchText.trim() === "") {
+      setFilteredFolders(folders);
+    } else {
+      const filtered = folders.filter((folder) =>
+        folder.type.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredFolders(filtered);
+    }
+  }, [searchText, folders]);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+        <ActivityIndicator size="large" color="#f59e0b" />
+        <Text style={{ marginTop: 10 }}>Loading folders...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+        <Text style={{ color: "red", marginBottom: 10 }}>{error}</Text>
+        <TouchableOpacity onPress={() => fetchFolders()}>
+          <Text style={{ color: "#2563eb", textDecorationLine: "underline" }}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -61,7 +91,7 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <TouchableOpacity style={styles.menuButton} onPress={() => router.back()}>
-          <Feather name="menu" size={24} color="#333" />
+          <Feather name="arrow-left" size={24} color="#333" />
         </TouchableOpacity>
 
         <View style={styles.searchContainer}>
@@ -80,31 +110,42 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({
             autoCorrect={false}
             autoCapitalize="none"
           />
-          <Image source={require("@/assets/icons/journalFolder.png")} style={styles.folderIcon} />
+          <Image
+            source={require("@/assets/icons/journalFolder.png")}
+            style={styles.folderIcon}
+          />
         </View>
 
         <Text style={styles.sectionTitle}>Folders</Text>
 
-        {filteredFolders.map((folder) => (
-          <TouchableOpacity
-            key={folder.id}
-            style={styles.folderItem}
-            onPress={() => router.push("/journal-history")}
-          >
-            <View style={styles.iconContainer}>
-              <Image
-                source={folder.icon}
-                style={styles.iconImage}
-                resizeMode="contain"
-              />
-            </View>
+        {filteredFolders.length > 0 ? (
+          filteredFolders.map((folder) => (
+            <TouchableOpacity
+              key={folder._id}
+              style={styles.folderItem}
+              onPress={() => router.push(`/journal-history?folderId=${folder._id}`)}
+            >
+              <View style={styles.iconContainer}>
+                <Image
+                  source={folder.icon || require("@/assets/icons/journal.png")}
+                  style={styles.iconImage}
+                  resizeMode="contain"
+                />
+              </View>
 
-            <View style={styles.infoContainer}>
-              <Text style={styles.folderTitle}>{folder.title}</Text>
-              <Text style={styles.folderDate}>{folder.lastEdited}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+              <View style={styles.infoContainer}>
+                <Text style={styles.folderTitle}>{folder.type}</Text>
+                <Text style={styles.folderDate}>
+                  {folder.lastEdited ? `Last Edited ${folder.lastEdited}` : "No recent activity"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={{ textAlign: "center", color: "#666", marginTop: 20 }}>
+            No folders found.
+          </Text>
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );

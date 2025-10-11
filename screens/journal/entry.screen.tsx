@@ -70,7 +70,7 @@ const JournalEntryScreen = () => {
         console.log("Journal created successfully:", data);
         Alert.alert("Success", "Journal entry created successfully!");
         router.push({
-          pathname: "/journal-dashboard",
+          pathname: "/journal-details",
           params: { folderId: data.folderId, journalId: data._id },
         });
       } else {
