@@ -53,7 +53,6 @@ const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({
         <Text style={styles.title}>Help & Support</Text>
       </View>
 
-      {/* Cloud Icon Illustration */}
       <View style={styles.illustrationContainer}>
           <Image
             source={require('@/assets/images/help-hero.png')}
@@ -63,7 +62,8 @@ const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({
 
       {/* Help Text */}
       <View style={styles.helpTextSection}>
-        <Text style={styles.helpTitle}>Need some help? Don't know how to use to App?</Text>
+        <Text style={styles.helpTitle}>Need some help?</Text>
+        <Text style={styles.helpTitle}>Don't know how to use the App?</Text>
         <Text style={styles.helpSubtitle}>Contact us</Text>
       </View>
 
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     marginTop: 40,
-    backgroundColor: '#fff',
   },
   menuIcon: {
     width: 40,
