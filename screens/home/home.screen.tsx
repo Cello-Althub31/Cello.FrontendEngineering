@@ -146,7 +146,7 @@ export default function HomeScreen() {
             className="bg-primary rounded-full py-4 px-8"
             textClassName="text-white text-lg font-semibold"
             onPress={() =>
-              router.push("/(drawer)/medication-intakes/medication-intakes")
+              router.push("/(secured)/medication-intakes/medication-intakes")
             }
           />
         </View>

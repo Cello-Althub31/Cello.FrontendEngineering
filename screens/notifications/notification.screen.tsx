@@ -1,15 +1,14 @@
 import { View, Text } from "react-native";
 import React from "react";
+import RemindersScreen from "@/screens/wellbeing-calendar/wellbeing-calendar";
+import { router } from "expo-router";
 
 
 
 export default function NotificationScreen () {
   
-
    return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <Text className="text-xl font-bold text-blue-500">Enjoying Cello?</Text>
-      </View>
+      <RemindersScreen />
     );
 
 }

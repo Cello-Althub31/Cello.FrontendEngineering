@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   View,
   Switch,
-  ActionSheetIOS,
+  Modal,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,12 +22,19 @@ import {
 import { router } from "expo-router";
 import { logout } from "@/lib/auth/authSlice";
 
+interface MenuItemProps {
+  id: string;
+  title: string;
+  subtitle?: string;
+  icon: React.ReactNode;
+  alert?: boolean;
+  toggle?: boolean;
+  action?: () => void;
+}
+
 const SettingsScreen = () => {
   const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(false);
-
-  const handleGoBack = () => {
-    router.back();
-  };
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const toggleFaceIdSwitch = () =>
     setIsFaceIdEnabled((previousState) => !previousState);
@@ -34,12 +42,30 @@ const SettingsScreen = () => {
   const handleNavigation = () => {
     router.push("/emergency-contacts");
   };
-  const handleLogout = () => {
+
+  const handleLogoutPress = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false);
     logout();
     router.push("/auth/login");
   };
 
-  const menuItems = [
+  const handleCancelLogout = () => {
+    setShowLogoutModal(false);
+  };
+
+  const handleHelpSupport = () => {
+    router.push("/help-support");
+  };
+
+  const handleAboutApp = () => {
+    router.push("/about-app");
+  };
+
+  const menuItems: MenuItemProps[] = [
     {
       id: "myAccount",
       title: "My Account",
@@ -72,20 +98,22 @@ const SettingsScreen = () => {
       title: "Log Out",
       subtitle: "Further secure your account for safety",
       icon: <AntDesign name="logout" size={26} color="black" />,
-      action: () => handleLogout(),
+      action: () => handleLogoutPress(),
     },
   ];
 
-  const moreItems = [
+  const moreItems: MenuItemProps[] = [
     {
       id: "help",
       title: "Help & Support",
       icon: <Feather name="bell" size={26} color="black" />,
+      action: () => handleHelpSupport(),
     },
     {
       id: "about",
       title: "About App",
       icon: <Feather name="heart" size={26} color="black" />,
+      action: () => handleAboutApp(),
     },
   ];
 
@@ -94,6 +122,7 @@ const SettingsScreen = () => {
       key={item.id}
       style={styles.menuItem}
       onPress={item.action}
+      activeOpacity={0.7}
     >
       <View style={styles.menuItemContent}>
         <View style={styles.menuIconContainer}>
@@ -162,23 +191,57 @@ const SettingsScreen = () => {
 
             <Text style={styles.moreHeader}>More</Text>
             <View style={styles.menuList}>
-              {moreItems.map((item) => (
-                <TouchableOpacity key={item.id} style={styles.menuItem}>
-                  <View style={styles.menuItemContent}>
-                    <View style={styles.menuIconContainer}>
-                      <View style={styles.iconBackground}>{item.icon}</View>
-                    </View>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.menuTitle}>{item.title}</Text>
-                    </View>
-                  </View>
-                  <AntDesign name="right" size={20} color="black" />
-                </TouchableOpacity>
-              ))}
+              {moreItems.map(renderMenuItem)}
             </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Logout Confirmation Modal */}
+      <Modal
+        visible={showLogoutModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleCancelLogout}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {/* Icon Container */}
+            <View style={styles.iconContainer}>
+              <Image
+                source={require("@/assets/icons/logout-icon.png")}
+                style={styles.logoutIcon}
+              />
+            </View>
+
+            {/* Modal Title */}
+            <Text style={styles.modalTitle}>Are you sure you want to log out?</Text>
+
+            {/* Modal Subtitle */}
+            <Text style={styles.modalSubtitle}>
+              While logged out, you may miss critical notifications and reminders
+            </Text>
+
+            {/* Logout Button */}
+            <TouchableOpacity
+              style={styles.logoutConfirmButton}
+              onPress={handleConfirmLogout}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.logoutConfirmButtonText}>Log out</Text>
+            </TouchableOpacity>
+
+            {/* Cancel Button */}
+            <TouchableOpacity
+              style={styles.cancelConfirmButton}
+              onPress={handleCancelLogout}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.cancelConfirmButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </LinearGradient>
   );
 };
@@ -295,5 +358,73 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginTop: 20,
     marginBottom: -10,
+  },
+  // Logout Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    borderRadius: 16,
+    paddingVertical: 40,
+    paddingHorizontal: 24,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  iconContainer: {
+    marginBottom: 24,
+  },
+  logoutIcon: {
+    width: 80,
+    height: 80,
+    resizeMode: "contain",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 24,
+    lineHeight: 20,
+  },
+  logoutConfirmButton: {
+    width: "100%",
+    backgroundColor: "#B22222",
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  logoutConfirmButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  cancelConfirmButton: {
+    width: "100%",
+    borderWidth: 1.5,
+    borderColor: "#B22222",
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  cancelConfirmButtonText: {
+    color: "#B22222",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

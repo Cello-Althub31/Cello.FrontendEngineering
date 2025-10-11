@@ -1,15 +1,30 @@
 import React, { useState } from 'react';
-import { Clock, Pill, Check, Pause, X, TrendingUp, CheckCircle2, XCircle, MinusCircle, Bell, User, Settings, Menu, BarChart3 } from 'lucide-react';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StatusBar, Image } from 'react-native';
+
+interface Medication {
+  id: number;
+  name: string;
+  dose: string;
+  time: string;
+  status: string;
+}
+
+interface MissedDose {
+  id: number;
+  name: string;
+  date: string;
+  time: string;
+}
 
 export default function HistoryTracker() {
   const [activeTab, setActiveTab] = useState('today');
-  const [medications, setMedications] = useState([
+  const [medications, setMedications] = useState<Medication[]>([
     { id: 1, name: 'Lisinopril', dose: '10mg', time: '08:00', status: 'pending' },
     { id: 2, name: 'Lisinopril', dose: '10mg', time: '08:00', status: 'pending' },
     { id: 3, name: 'Lisinopril', dose: '10mg', time: '08:00', status: 'pending' },
   ]);
 
-  const [historyData] = useState({
+  const historyData = {
     compliance: 'Compliant',
     complianceRate: 56,
     taken: 4,
@@ -17,8 +32,8 @@ export default function HistoryTracker() {
     totalMissed: 3,
     missedDoses: [
       { id: 1, name: 'Lisinopril', date: 'Aug 1', time: '10:30AM' }
-    ]
-  });
+    ] as MissedDose[]
+  };
 
   const handleStatusChange = (id: number, newStatus: string) => {
     setMedications(meds =>
@@ -29,255 +44,543 @@ export default function HistoryTracker() {
   };
 
   const renderToday = () => (
-    <div className="p-4">
-      <div className="flex items-center gap-2 mb-6">
-        <Clock className="w-5 h-5 text-gray-600" />
-        <h2 className="text-lg font-semibold text-gray-800">Today's Schedule</h2>
-      </div>
+    <View style={styles.content}>
+      <View style={styles.sectionHeader}>
+        <Image 
+          source={require('@/assets/icons/clock.png')} 
+          style={styles.headerIcon}
+        />
+        <Text style={styles.sectionTitle}>Today's Schedule</Text>
+      </View>
 
-      <div className="space-y-3">
-        {medications.map(med => (
-          <div key={med.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center">
-                  <Pill className="w-6 h-6 text-red-500" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">{med.name}</h3>
-                  <p className="text-sm text-gray-500">{med.dose} • {med.time}</p>
-                </div>
-              </div>
+      {medications.map(med => (
+        <View key={med.id} style={styles.medicationCard}>
+          <View style={styles.medicationInfo}>
+            <View style={styles.pillIcon}>
+              <Image 
+                source={require('@/assets/icons/pill.png')} 
+                style={styles.iconSmall}
+              />
+            </View>
+            <View>
+              <Text style={styles.medicationName}>{med.name}</Text>
+              <Text style={styles.medicationDetails}>{med.dose} • {med.time}</Text>
+            </View>
+          </View>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleStatusChange(med.id, 'taken')}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                    med.status === 'taken'
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-100 text-gray-400 hover:bg-green-50 hover:text-green-500'
-                  }`}
-                  aria-label="Mark as taken"
-                >
-                  <Check className="w-5 h-5" />
-                </button>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity
+              onPress={() => handleStatusChange(med.id, 'taken')}
+              style={[
+                styles.actionButton,
+                med.status === 'taken' ? styles.takenButton : styles.defaultButton
+              ]}
+            >
+              <Image 
+                source={require('@/assets/icons/check.png')} 
+                style={[
+                  styles.iconSmall,
+                  { tintColor: med.status === 'taken' ? '#fff' : '#9CA3AF' }
+                ]}
+              />
+            </TouchableOpacity>
 
-                <button
-                  onClick={() => handleStatusChange(med.id, 'paused')}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                    med.status === 'paused'
-                      ? 'bg-orange-500 text-white'
-                      : 'bg-gray-100 text-gray-400 hover:bg-orange-50 hover:text-orange-500'
-                  }`}
-                  aria-label="Pause"
-                >
-                  <Pause className="w-4 h-4" />
-                </button>
+            <TouchableOpacity
+              onPress={() => handleStatusChange(med.id, 'paused')}
+              style={[
+                styles.actionButton,
+                med.status === 'paused' ? styles.pausedButton : styles.defaultButton
+              ]}
+            >
+              <Image 
+                source={require('@/assets/icons/pause.png')} 
+                style={[
+                  styles.iconSmall,
+                  { tintColor: med.status === 'paused' ? '#fff' : '#9CA3AF' }
+                ]}
+              />
+            </TouchableOpacity>
 
-                <button
-                  onClick={() => handleStatusChange(med.id, 'skipped')}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                    med.status === 'skipped'
-                      ? 'bg-red-500 text-white'
-                      : 'bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-500'
-                  }`}
-                  aria-label="Skip"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+            <TouchableOpacity
+              onPress={() => handleStatusChange(med.id, 'skipped')}
+              style={[
+                styles.actionButton,
+                med.status === 'skipped' ? styles.skippedButton : styles.defaultButton
+              ]}
+            >
+              <Image 
+                source={require('@/assets/icons/cancel.png')} 
+                style={[
+                  styles.iconSmall,
+                  { tintColor: med.status === 'skipped' ? '#fff' : '#9CA3AF' }
+                ]}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      ))}
+    </View>
   );
 
   const renderHistory = () => (
-    <div className="p-4">
-      <div className="flex items-center gap-2 mb-6">
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="3" y="3" width="18" height="18" rx="2" />
-          <line x1="9" y1="3" x2="9" y2="21" />
-        </svg>
-        <h2 className="text-lg font-semibold text-gray-800">History</h2>
-      </div>
+    <View style={styles.content}>
+      <View style={styles.sectionHeader}>
+        <Image 
+          source={require('@/assets/icons/history.png')} 
+          style={styles.headerIcon}
+        />
+        <Text style={styles.sectionTitle}>History</Text>
+      </View>
 
       {/* Compliance Card */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <TrendingUp className="w-5 h-5 text-red-500" />
-            <div>
-              <h3 className="font-semibold text-gray-900">Compliance</h3>
-              <p className="text-sm text-gray-500">{historyData.compliance}</p>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold text-gray-900">{historyData.complianceRate}%</div>
-            <p className="text-xs text-gray-500">Average</p>
-          </div>
-        </div>
-      </div>
+      <View style={styles.historyCard}>
+        <View style={styles.historyCardRow}>
+          <View style={styles.historyCardLeft}>
+            <Image 
+              source={require('@/assets/icons/ion-analytics.png')} 
+              style={styles.iconMedium}
+            />
+            <View>
+              <Text style={styles.historyCardTitle}>Compliance</Text>
+              <Text style={styles.historyCardSubtitle}>{historyData.compliance}</Text>
+            </View>
+          </View>
+          <View style={styles.historyCardRight}>
+            <Text style={styles.historyCardValue}>{historyData.complianceRate}%</Text>
+            <Text style={styles.historyCardLabel}>Average</Text>
+          </View>
+        </View>
+      </View>
 
       {/* Taken Card */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-3">
-        <div className="flex items-center gap-3">
-          <CheckCircle2 className="w-5 h-5 text-green-500" />
-          <div>
-            <h3 className="font-semibold text-gray-900">Taken</h3>
-            <p className="text-2xl font-bold text-gray-900">{historyData.taken}</p>
-          </div>
-        </div>
-      </div>
+      <View style={styles.historyCard}>
+        <View style={styles.historyCardLeft}>
+          <Image 
+            source={require('@/assets/icons/icons-medicines.png')} 
+            style={styles.iconMedium}
+          />
+          <View>
+            <Text style={styles.historyCardTitle}>Taken</Text>
+            <Text style={styles.historyCardValue}>{historyData.taken}</Text>
+          </View>
+        </View>
+      </View>
 
       {/* Missed Card */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-3">
-        <div className="flex items-center gap-3">
-          <XCircle className="w-5 h-5 text-orange-500" />
-          <div>
-            <h3 className="font-semibold text-gray-900">Missed</h3>
-            <p className="text-2xl font-bold text-gray-900">{historyData.missed}</p>
-          </div>
-        </div>
-      </div>
+      <View style={styles.historyCard}>
+        <View style={styles.historyCardLeft}>
+          <Image 
+            source={require('@/assets/icons/missed-medicines.png')} 
+            style={styles.iconMedium}
+          />
+          <View>
+            <Text style={styles.historyCardTitle}>Missed</Text>
+            <Text style={styles.historyCardValue}>{historyData.missed}</Text>
+          </View>
+        </View>
+      </View>
 
       {/* Total Missed Card */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
-        <div className="flex items-center gap-3">
-          <MinusCircle className="w-5 h-5 text-gray-400" />
-          <div>
-            <h3 className="font-semibold text-gray-900">Missed</h3>
-            <p className="text-2xl font-bold text-gray-900">{historyData.totalMissed}</p>
-          </div>
-        </div>
-      </div>
+      <View style={[styles.historyCard, { marginBottom: 16 }]}>
+        <View style={styles.historyCardLeft}>
+          <Image 
+            source={require('@/assets/icons/missed-outline.png')} 
+            style={styles.iconMedium}
+          />
+          <View>
+            <Text style={styles.historyCardTitle}>Missed</Text>
+            <Text style={styles.historyCardValue}>{historyData.totalMissed}</Text>
+          </View>
+        </View>
+      </View>
 
       {/* Missed Doses List */}
-      <div className="space-y-3">
-        {historyData.missedDoses.map(dose => (
-          <div key={dose.id} className="bg-red-50 rounded-xl p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                <Pill className="w-6 h-6 text-red-500" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-900">{dose.name}</h4>
-                <p className="text-sm text-gray-600">Missed</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">{dose.date}</p>
-              <p className="text-sm text-gray-600">{dose.time}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+      {historyData.missedDoses.map(dose => (
+        <View key={dose.id} style={styles.missedDoseCard}>
+          <View style={styles.historyCardLeft}>
+            <View style={styles.missedDoseIcon}>
+              <Image
+                source={require('@/assets/icons/Pill-red.png')}
+                style={styles.iconMedium}
+              />
+            </View>
+            <View>
+              <Text style={styles.missedDoseName}>{dose.name}</Text>
+              <Text style={styles.missedDoseStatus}>Missed</Text>
+            </View>
+          </View>
+          <View style={styles.historyCardRight}>
+            <Text style={styles.missedDoseDate}>{dose.date}</Text>
+            <Text style={styles.missedDoseTime}>{dose.time}</Text>
+          </View>
+        </View>
+      ))}
+      {historyData.missedDoses.map(dose => (
+        <View key={dose.id} style={styles.missedDoseCard}>
+          <View style={styles.historyCardLeft}>
+            <View style={styles.missedDoseIcon}>
+              <Image
+                source={require('@/assets/icons/Pill-red.png')}
+                style={styles.iconMedium}
+              />
+            </View>
+            <View>
+              <Text style={styles.missedDoseName}>{dose.name}</Text>
+              <Text style={styles.missedDoseStatus}>Missed</Text>
+            </View>
+          </View>
+          <View style={styles.historyCardRight}>
+            <Text style={styles.missedDoseDate}>{dose.date}</Text>
+            <Text style={styles.missedDoseTime}>{dose.time}</Text>
+          </View>
+        </View>
+      ))}
+      {historyData.missedDoses.map(dose => (
+        <View key={dose.id} style={styles.missedDoseCard}>
+          <View style={styles.historyCardLeft}>
+            <View style={styles.missedDoseIcon}>
+              <Image
+                source={require('@/assets/icons/Pill-red.png')}
+                style={styles.iconMedium}
+              />
+            </View>
+            <View>
+              <Text style={styles.missedDoseName}>{dose.name}</Text>
+              <Text style={styles.missedDoseStatus}>Missed</Text>
+            </View>
+          </View>
+          <View style={styles.historyCardRight}>
+            <Text style={styles.missedDoseDate}>{dose.date}</Text>
+            <Text style={styles.missedDoseTime}>{dose.time}</Text>
+          </View>
+        </View>
+      ))}
+    </View>
   );
 
   const renderAnalytics = () => (
-    <div className="p-4">
-      <div className="flex items-center gap-2 mb-8">
-        <BarChart3 className="w-5 h-5 text-gray-800" />
-        <h2 className="text-lg font-semibold text-gray-800">Analytics</h2>
-      </div>
+    <View style={styles.content}>
+      <View style={styles.sectionHeader}>
+        <Image
+          source={require('@/assets/icons/analytics.png')}
+          style={styles.headerIcon}
+        />
+        <Text style={styles.sectionTitle}>Analytics</Text>
+      </View>
 
-      <div className="flex flex-col items-center justify-center py-12">
-        <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-8">
-          <BarChart3 className="w-8 h-8 text-gray-400" />
-        </div>
+      <View style={styles.analyticsContainer}>
+        <View style={styles.analyticsIconContainer}>
+          <Image
+            source={require('@/assets/icons/bar-chart.png')}
+            style={styles.iconLarge}
+          />
+        </View>
 
-        <div className="text-center mb-2">
-          <div className="text-6xl font-bold text-gray-900 mb-2">{historyData.complianceRate}%</div>
-          <p className="text-base font-medium text-gray-900 mb-1">Overall Compliance Rate</p>
-        </div>
-
-        <p className="text-sm text-gray-600 text-center max-w-xs">
-          Based on 9 medication doses<br />in the selected period
-        </p>
-      </div>
-    </div>
+        <Text style={styles.analyticsPercentage}>{historyData.complianceRate}%</Text>
+        <Text style={styles.analyticsTitle}>Overall Compliance Rate</Text>
+        <Text style={styles.analyticsSubtitle}>
+          Based on 9 medication doses{'\n'}in the selected period
+        </Text>
+      </View>
+    </View>
   );
 
   return (
-    <div className="max-w-md mx-auto bg-gradient-to-b from-white to-red-50 min-h-screen">
-      {/* Status Bar */}
-      <div className="flex items-center justify-between px-6 py-3 bg-white">
-        <span className="text-sm font-semibold">9:41</span>
-        <div className="flex items-center gap-1">
-          <div className="flex gap-0.5">
-            <div className="w-0.5 h-3 bg-gray-800 rounded"></div>
-            <div className="w-0.5 h-3 bg-gray-800 rounded"></div>
-            <div className="w-0.5 h-3 bg-gray-800 rounded"></div>
-            <div className="w-0.5 h-3 bg-gray-400 rounded"></div>
-          </div>
-        </div>
-      </div>
-
-      {/* Header with icons - only show on Analytics */}
-      {activeTab === 'analytics' && (
-        <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
-          <Menu className="w-6 h-6 text-gray-700" />
-          <div className="flex items-center gap-3">
-            <Bell className="w-6 h-6 text-gray-700" />
-            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-              <User className="w-5 h-5 text-gray-600" />
-            </div>
-            <Settings className="w-6 h-6 text-red-500" />
-          </div>
-        </div>
-      )}
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
 
       {/* Tab Navigation */}
-      <div className="flex border-b border-gray-200 bg-white">
-        <button
-          onClick={() => setActiveTab('today')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-            activeTab === 'today'
-              ? 'text-red-600'
-              : 'text-gray-400'
-          }`}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          onPress={() => setActiveTab('today')}
+          style={styles.tab}
         >
-          Today
-          {activeTab === 'today' && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600"></div>
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('history')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-            activeTab === 'history'
-              ? 'text-red-600'
-              : 'text-gray-400'
-          }`}
+          <Text style={[styles.tabText, activeTab === 'today' && styles.activeTabText]}>
+            Today
+          </Text>
+          {activeTab === 'today' && <View style={styles.tabIndicator} />}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => setActiveTab('history')}
+          style={styles.tab}
         >
-          History
-          {activeTab === 'history' && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600"></div>
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('analytics')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-            activeTab === 'analytics'
-              ? 'text-red-600'
-              : 'text-gray-400'
-          }`}
+          <Text style={[styles.tabText, activeTab === 'history' && styles.activeTabText]}>
+            History
+          </Text>
+          {activeTab === 'history' && <View style={styles.tabIndicator} />}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => setActiveTab('analytics')}
+          style={styles.tab}
         >
-          Analytics
-          {activeTab === 'analytics' && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600"></div>
-          )}
-        </button>
-      </div>
+          <Text style={[styles.tabText, activeTab === 'analytics' && styles.activeTabText]}>
+            Analytics
+          </Text>
+          {activeTab === 'analytics' && <View style={styles.tabIndicator} />}
+        </TouchableOpacity>
+      </View>
 
       {/* Content */}
-      <div className="pb-6">
+      <ScrollView style={styles.scrollView}>
         {activeTab === 'today' && renderToday()}
         {activeTab === 'history' && renderHistory()}
         {activeTab === 'analytics' && renderAnalytics()}
-      </div>
-    </div>
+      </ScrollView>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  hamburgerIcon: {
+    width: 24,
+    height: 24,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 14,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  tabText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#9CA3AF',
+  },
+  activeTabText: {
+    color: '#EF4444',
+  },
+  tabIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 2,
+    backgroundColor: '#EF4444',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  content: {
+    padding: 16,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  headerIcon: {
+    width: 20,
+    height: 20,
+  },
+  iconSmall: {
+    width: 16,
+    height: 16,
+  },
+  iconMedium: {
+    width: 20,
+    height: 20,
+  },
+  iconLarge: {
+    width: 36,
+    height: 36,
+  },
+  medicationCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  medicationInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  pillIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#FEE2E2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  medicationName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  medicationDetails: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 2,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  actionButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  defaultButton: {
+    backgroundColor: '#F3F4F6',
+  },
+  takenButton: {
+    backgroundColor: '#10B981',
+  },
+  pausedButton: {
+    backgroundColor: '#F97316',
+  },
+  skippedButton: {
+    backgroundColor: '#EF4444',
+  },
+  historyCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  historyCardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  historyCardLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  historyCardTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  historyCardSubtitle: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 2,
+  },
+  historyCardRight: {
+    alignItems: 'flex-end',
+  },
+  historyCardValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  historyCardLabel: {
+    fontSize: 11,
+    color: '#6B7280',
+  },
+  missedDoseCard: {
+    backgroundColor: '#FEE2E2',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  missedDoseIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  missedDoseName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  missedDoseStatus: {
+    fontSize: 12,
+    color: '#4B5563',
+    marginTop: 2,
+  },
+  missedDoseDate: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#111827',
+  },
+  missedDoseTime: {
+    fontSize: 12,
+    color: '#4B5563',
+    marginTop: 2,
+  },
+  analyticsContainer: {
+    alignItems: 'center',
+    paddingVertical: 48,
+  },
+  analyticsIconContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 32,
+  },
+  analyticsPercentage: {
+    fontSize: 56,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 8,
+  },
+  analyticsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 8,
+  },
+  analyticsSubtitle: {
+    fontSize: 13,
+    color: '#6B7280',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+});
