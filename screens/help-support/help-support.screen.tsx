@@ -7,12 +7,13 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 interface HelpSupportScreenProps {
   onBack?: () => void;
   onContactUs?: () => void;
-  onBackPress?: () => void;
+  onBackPress?: (route: string) => void;
 }
 
 const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({
@@ -25,16 +26,21 @@ const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({
     onContactUs?.();
   };
 
+  const handleGoBack = () => {
+    router.back();
+    onBack?.();
+  };
+
   const handleBackPress = () => {
-    onBackPress?.();
+   router.push('/settings');
+    onBackPress?.('settings');
   };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Header with Navigation */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={handleBackPress} style={styles.menuIcon}>
-          <MaterialIcons name="menu" size={24} color="#333" />
+        <TouchableOpacity onPress={handleGoBack}>
+          <AntDesign name="left-circle" size={30} color="black" />
         </TouchableOpacity>
         <Image
           source ={require('@/assets/images/profile.png')}
@@ -49,12 +55,11 @@ const HelpSupportScreen: React.FC<HelpSupportScreenProps> = ({
 
       {/* Cloud Icon Illustration */}
       <View style={styles.illustrationContainer}>
-        <View style={styles.cloudIcon}>
-          <View style={[styles.cloudBubble, styles.cloudBubbleLarge]} />
-          <View style={[styles.cloudBubble, styles.cloudBubbleSmall1]} />
-          <View style={[styles.cloudBubble, styles.cloudBubbleSmall2]} />
+          <Image
+            source={require('@/assets/images/help-hero.png')}
+            style={styles.heroImage}
+          />
         </View>
-      </View>
 
       {/* Help Text */}
       <View style={styles.helpTextSection}>
@@ -94,6 +99,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
+    marginTop: 40,
     backgroundColor: '#fff',
   },
   menuIcon: {
@@ -124,33 +130,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
   },
-  cloudIcon: {
-    position: 'relative',
-    width: 120,
-    height: 80,
-  },
-  cloudBubble: {
-    position: 'absolute',
-    borderRadius: 50,
-    backgroundColor: '#c97070',
-  },
-  cloudBubbleLarge: {
-    width: 80,
-    height: 50,
-    bottom: 10,
-    left: 15,
-  },
-  cloudBubbleSmall1: {
-    width: 30,
-    height: 30,
-    top: 5,
-    right: 30,
-  },
-  cloudBubbleSmall2: {
-    width: 22,
-    height: 22,
-    top: 20,
-    right: 10,
+
+  heroImage: {
+    width: 223,
+    height: 190,
+    resizeMode: 'contain',
   },
   helpTextSection: {
     paddingHorizontal: 16,
@@ -205,3 +189,7 @@ const styles = StyleSheet.create({
 });
 
 export default HelpSupportScreen;
+
+function openDrawer() {
+  throw new Error('Function not implemented.');
+}

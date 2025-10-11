@@ -7,7 +7,10 @@ import {
 } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View, Image, ScrollView } from "react-native";
 import { router } from "expo-router";
-import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 
 import type { DrawerContentComponentProps } from "@react-navigation/drawer";
 
@@ -28,7 +31,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
         <View style={{ alignItems: "center" }}>
           {/* Profile Image */}
           <Image
-            source={require('@/assets/images/profile.png')} // Help with image placement using context API so users can upload their own images
+            source={require("@/assets/images/profile.png")} // Help with image placement using context API so users can upload their own images
             style={{
               width: 80,
               height: 80,
@@ -132,36 +135,6 @@ export default function DrawerLayout() {
       />
 
       <Drawer.Screen
-        name="profile/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="person-outline" size={size} color="red" />
-              <Text>Profile</Text>
-            </View>
-          ),
-        }}
-      />
-
-      <Drawer.Screen
-        name="settings/index"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <Ionicons name="settings-outline" size={size} color="red" />
-              <Text>Settings</Text>
-            </View>
-          ),
-        }}
-      />
-
-      <Drawer.Screen
         name="journal/index"
         options={{
           title: "",
@@ -190,6 +163,49 @@ export default function DrawerLayout() {
             >
               <MaterialIcons name="history" size={size} color="red" />
               <Text>History Tracker</Text>
+            </View>
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="notifications/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <MaterialIcons name="notifications" size={size} color="red" />
+              <Text>Notifications</Text>
+            </View>
+          ),
+        }}
+      />
+
+      <Drawer.Screen
+        name="settings/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <Ionicons name="settings-outline" size={size} color="red" />
+              <Text>Settings</Text>
+            </View>
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="profile/index"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <Ionicons name="person-outline" size={size} color="red" />
+              <Text>Profile</Text>
             </View>
           ),
         }}

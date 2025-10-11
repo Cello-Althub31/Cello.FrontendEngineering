@@ -58,11 +58,11 @@ const SettingsScreen = () => {
   };
 
   const handleHelpSupport = () => {
-    router.push("./help-support");
+    router.push("/help-support");
   };
 
   const handleAboutApp = () => {
-    router.push("./about-app");
+    router.push("/about-app");
   };
 
   const menuItems: MenuItemProps[] = [
