@@ -8,20 +8,20 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import RNPickerSelect from "react-native-picker-select";
-import remindersApi from '@/lib/api/reminders';
+import remindersApi from "@/lib/api/reminders";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const MedicationReminderScreen = () => {
-  const handleGoBack = () => {
-    router.back();
-  };
-  const bloodTypeOptions = [
+  const handleGoBack = () => router.back();
+
+  const typeOptions = [
     { label: "A+", value: "A+" },
     { label: "A−", value: "A−" },
     { label: "B+", value: "B+" },
@@ -33,10 +33,10 @@ const MedicationReminderScreen = () => {
   ];
 
   const frequencyOptions = [
-    { label: "Once daily", value: "once" },
-    { label: "Twice daily", value: "twice" },
-    { label: "Every 6 hours", value: "6hr" },
-    { label: "Custom", value: "custom" },
+    { label: "Once daily", value: "Once daily" },
+    { label: "Twice daily", value: "Twice daily" },
+    { label: "Every 6 hours", value: "Every 6 hours" },
+    { label: "Custom", value: "Custom" },
   ];
 
   const timeSlotOptions = [
@@ -45,8 +45,13 @@ const MedicationReminderScreen = () => {
     { label: "Evening", value: "evening" },
     { label: "Night", value: "night" },
   ];
+
+
+  const [showStartPicker, setShowStartPicker] = useState(false);
+  const [showEndPicker, setShowEndPicker] = useState(false);
+
   const [name, setName] = useState("");
-  const [bloodType, setBloodType] = useState("");
+  const [type, setType] = useState("");
   const [dose, setDose] = useState("");
   const [amount, setAmount] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -54,7 +59,10 @@ const MedicationReminderScreen = () => {
   const [frequency, setFrequency] = useState("");
   const [selectedSlot, setSelectedSlot] = useState("");
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
-   const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const startDateObj = startDate ? new Date(startDate) : new Date();
+  const endDateObj = endDate ? new Date(endDate) : new Date();
 
   const handleAddSlot = () => {
     if (selectedSlot && !timeSlots.includes(selectedSlot)) {
@@ -63,40 +71,39 @@ const MedicationReminderScreen = () => {
     }
   };
 
-  const handleNext = () => {
-    router.push("/home");
-  };
-  const handleScreen = async () => {
-    if (!name || !dose || !frequency || !timeSlots || !startDate || !endDate || !amount || !bloodType) {
-     Alert.alert("Please fill in all required fields.");
+  const handleCreateMedication = async () => {
+    if (!name || !dose || !amount || !startDate || !endDate || !frequency || !type) {
+      Alert.alert("Missing Fields", "Please fill in all required fields.");
       return;
     }
+
     try {
       setLoading(true);
 
-      const payload ={
-         name,
-        type:bloodType,
-        dosage: dose,
-        amount,
+      const payload = {
+        name,
+        type,
+        dose,
+        amount: parseInt(amount, 10),
+        start_date: new Date(startDate).toISOString(),
+        end_date: new Date(endDate).toISOString(),
         frequency,
-        times: timeSlots,
-        startDate,
-        endDate,
+        timeSlot: timeSlots[0] || "morning",
       };
-       const response = await remindersApi.doctorAppointmentReminder(payload);
 
-         console.log("Medication Reminder Created:", response.data);
-         Alert.alert("Success", "Reminder created successfully!");
-         router.push("/wellbeing-calendar");
-      } catch (error: any) {
-         console.error("Error creating appointment:", error.response?.data || error);
-         Alert.alert("Error", error.response?.data?.message || "Failed to create appointment.");
-      } finally {
-         setLoading(false);
-      }
-   }; 
-     
+      console.log("Sending payload:", payload);
+      const response = await remindersApi.createMedicationReminder(payload);
+      console.log("Medication Created:", response.data);
+
+      Alert.alert("Success", "Medication reminder created successfully!");
+      router.push("/wellbeing-calendar");
+    } catch (error: any) {
+      console.error("Error creating medication:", error.response?.data || error);
+      Alert.alert("Error", error.response?.data?.message || "Failed to create medication.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <LinearGradient
@@ -109,89 +116,117 @@ const MedicationReminderScreen = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.inner}>
             <TouchableOpacity onPress={handleGoBack}>
               <AntDesign name="left-circle" size={30} color="black" />
             </TouchableOpacity>
+
             <Text style={styles.headerText}>Medication Reminder</Text>
             <Text style={styles.subHeader}>
               Never miss a dose—get gentle nudges at the right time.
             </Text>
+
             <View style={styles.formContainer}>
               <View style={styles.formSection}>
-                <Text style={styles.label}>Name</Text>
+                <Text style={styles.label}>Medication Name*</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Name (e.g. Ibuprofen)"
+                  placeholder="e.g. Ibuprofen"
+                  value={name}
+                  onChangeText={setName}
                 />
               </View>
 
               <View style={styles.formSection}>
-                <Text style={styles.label}>Type*</Text>
+                <Text style={styles.label}>Blood Type*</Text>
                 <RNPickerSelect
-                  onValueChange={setBloodType}
-                  items={bloodTypeOptions}
-                  placeholder={{ label: "Select blood type", color: "black", value: null }}
+                  onValueChange={setType}
+                  items={typeOptions}
+                  placeholder={{ label: "Select type", value: null }}
                   style={{
                     inputIOS: styles.dropdownText,
                     inputAndroid: styles.dropdownText,
-                    iconContainer: { top: 10, right: 12 },
                   }}
-                  Icon={() => (
-                    <Ionicons name="chevron-down" size={20} color="#888" />
-                  )}
+                  Icon={() => <Ionicons name="chevron-down" size={20} color="#888" />}
                 />
               </View>
 
               <View style={styles.formSection}>
-                <Text style={styles.label}>Dosage</Text>
+                <Text style={styles.label}>Dose*</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Dose (e.g. 100mg)"
+                  placeholder="e.g. 500mg"
                   value={dose}
                   onChangeText={setDose}
                 />
               </View>
 
               <View style={styles.formSection}>
-                <Text style={styles.label}>Amount</Text>
+                <Text style={styles.label}>Dosage Amount*</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Amount (e.g. 3)"
+                  placeholder="e.g. 2"
+                  keyboardType="numeric"
                   value={amount}
                   onChangeText={setAmount}
-                  keyboardType="numeric"
                 />
               </View>
 
-              <Text style={styles.remindersTitle}>Reminders</Text>
-
               <View style={styles.dateRow}>
                 <View style={styles.dateInputContainer}>
-                  <Text style={styles.label}>Start Date</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="dd/mm/yy"
-                    value={startDate}
-                    onChangeText={setStartDate}
-                  />
+                  <Text style={styles.label}>Start Date*</Text>
+                  <TouchableOpacity
+                    style={styles.datePickerButton}
+                    onPress={() => setShowStartPicker(true)}
+                  >
+                    <Text style={styles.dateText}>
+                      {startDate ? new Date(startDate).toLocaleDateString() : "Select start date"}
+                    </Text>
+                    <Ionicons name="calendar" size={20} color="#E64646" />
+                  </TouchableOpacity>
+
+                  {showStartPicker && (
+                    <DateTimePicker
+                      value={startDateObj}
+                      mode="date"
+                      display={Platform.OS === "ios" ? "spinner" : "default"}
+                      onChange={(event, selectedDate) => {
+                        setShowStartPicker(false);
+                        if (selectedDate) setStartDate(selectedDate.toISOString());
+                      }}
+                    />
+                  )}
                 </View>
                 <View style={styles.dateInputContainer}>
-                  <Text style={styles.label}>End Date</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="dd/mm/yy"
-                    value={endDate}
-                    onChangeText={setEndDate}
-                  />
+                  <Text style={styles.label}>End Date*</Text>
+                  <TouchableOpacity
+                    style={styles.datePickerButton}
+                    onPress={() => setShowEndPicker(true)}
+                  >
+                    <Text style={styles.dateText}>
+                      {endDate ? new Date(endDate).toLocaleDateString() : "Select end date"}
+                    </Text>
+                    <Ionicons name="calendar" size={20} color="#E64646" />
+                  </TouchableOpacity>
+
+                  {showEndPicker && (
+                    <DateTimePicker
+                      value={endDateObj}
+                      mode="date"
+                      display={Platform.OS === "ios" ? "spinner" : "default"}
+                      onChange={(event, selectedDate) => {
+                        setShowEndPicker(false);
+                        if (selectedDate) setEndDate(selectedDate.toISOString());
+                      }}
+                    />
+                  )}
                 </View>
               </View>
 
               <View style={styles.formSection}>
-                <Text style={styles.label}>Frequency</Text>
+                <Text style={styles.label}>Frequency*</Text>
                 <RNPickerSelect
                   onValueChange={setFrequency}
                   items={frequencyOptions}
@@ -199,11 +234,8 @@ const MedicationReminderScreen = () => {
                   style={{
                     inputIOS: styles.dropdownText,
                     inputAndroid: styles.dropdownText,
-                    iconContainer: { top: 10, right: 12 },
                   }}
-                  Icon={() => (
-                    <Ionicons name="chevron-down" size={20} color="#888" />
-                  )}
+                  Icon={() => <Ionicons name="chevron-down" size={20} color="#888" />}
                 />
               </View>
 
@@ -216,17 +248,11 @@ const MedicationReminderScreen = () => {
                   style={{
                     inputIOS: styles.dropdownText,
                     inputAndroid: styles.dropdownText,
-                    iconContainer: { top: 10, right: 12 },
                   }}
-                  Icon={() => (
-                    <Ionicons name="chevron-down" size={20} color="#888" />
-                  )}
+                  Icon={() => <Ionicons name="chevron-down" size={20} color="#888" />}
                 />
 
-                <TouchableOpacity
-                  style={styles.addSlotsButton}
-                  onPress={handleAddSlot}
-                >
+                <TouchableOpacity style={styles.addSlotsButton} onPress={handleAddSlot}>
                   <Ionicons name="add" size={18} color="#E64646" />
                   <Text style={styles.addSlotsText}>Add Slot</Text>
                 </TouchableOpacity>
@@ -244,17 +270,16 @@ const MedicationReminderScreen = () => {
             </View>
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.nextButton1} onPress={handleNext}>
-                <Text style={styles.nextButtonText1}>
-                  {" "}
-                  💡 You can always set up reminders later.
-                </Text>
-              </TouchableOpacity>
               <TouchableOpacity
-                style={styles.nextButton}
-                onPress={handleScreen}
+                style={[styles.nextButton, loading && { opacity: 0.6 }]}
+                onPress={handleCreateMedication}
+                disabled={loading}
               >
-                <Text style={styles.nextButtonText}>Next</Text>
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.nextButtonText}>Done</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -265,39 +290,15 @@ const MedicationReminderScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 40,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
-  inner: {
-    flex: 1,
-    paddingHorizontal: 15,
-    gap: 10,
-  },
-  backButton: {
-    alignSelf: "flex-start",
-  },
-
-  headerText: {
-    marginTop: 15,
-    marginBottom: 10,
-    fontSize: 26,
-    fontWeight: "600",
-  },
-  subHeader: {
-    fontSize: 20,
-    fontWeight: 400,
-    color: "#555",
-    marginBottom: 20,
-  },
+  container: { flex: 1, paddingTop: 40 },
+  scrollContent: { flexGrow: 1 },
+  inner: { flex: 1, paddingHorizontal: 15, gap: 10 },
+  headerText: { marginTop: 15, fontSize: 26, fontWeight: "600" },
+  subHeader: { fontSize: 16, color: "#555", marginBottom: 20 },
   formContainer: {
     backgroundColor: "#fff",
     borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    padding: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -305,37 +306,17 @@ const styles = StyleSheet.create({
     elevation: 5,
     gap: 15,
   },
-  formSection: {
-    marginBottom: 20
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: "black",
-    fontWeight: "300",
-  },
+  formSection: { marginBottom: 20 },
+  label: { fontSize: 16, marginBottom: 8, color: "black" },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 10,
-    padding: 14,
+    padding: 12,
     fontSize: 16,
   },
-  remindersTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginVertical: 20,
-    color: "#E64646",
-  },
-  dateRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 10,
-    marginBottom: 20,
-  },
-  dateInputContainer: {
-    flex: 1,
-  },
+  dateRow: { flexDirection: "row", justifyContent: "space-between", gap: 10 },
+  dateInputContainer: { flex: 1 },
   dropdownText: {
     fontSize: 16,
     paddingVertical: 12,
@@ -344,50 +325,15 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 8,
     color: "black",
-    backgroundColor: "fff",
   },
-  addSlotsButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 10,
-    gap: 6,
-  },
-  addSlotsText: {
-    color: "#E64646",
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  slotList: {
-    marginTop: 10,
-    paddingLeft: 10,
-  },
-  slotItem: {
-    fontSize: 14,
-    color: "#555",
-    marginBottom: 4,
-  },
-
-  buttonContainer: {
-    width: "100%",
-    alignSelf: "center",
-    marginBottom: 40,
-    marginTop: 20,
-    gap: 15,
-  },
-  nextButton1: {
-    backgroundColor: "#C86969",
-    paddingVertical: 20,
-    borderRadius: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 8,
-  },
+  addSlotsButton: { flexDirection: "row", alignItems: "center", marginTop: 10, gap: 6 },
+  addSlotsText: { color: "#E64646", fontSize: 16, fontWeight: "500" },
+  slotList: { marginTop: 10, paddingLeft: 10 },
+  slotItem: { fontSize: 14, color: "#555", marginBottom: 4 },
+  buttonContainer: { marginTop: 20, marginBottom: 40 },
   nextButton: {
     backgroundColor: "#B22222",
-    paddingVertical: 20,
+    paddingVertical: 18,
     borderRadius: 10,
     alignItems: "center",
     shadowColor: "#000",
@@ -396,15 +342,20 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 8,
   },
-  nextButtonText1: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "500",
+  nextButtonText: { color: "white", fontSize: 18, fontWeight: "bold" },
+  datePickerButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    padding: 12,
   },
-  nextButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
+  dateText: {
+    fontSize: 16,
+    color: "#333",
   },
 });
+
 export default MedicationReminderScreen;
