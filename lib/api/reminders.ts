@@ -4,6 +4,8 @@ import apiClient from '@/lib/utils/apiClient';
 const remindersApi = {
   getById: (id: string) => apiClient.get(`/medications${id}`),
 
+  getActiveReminder: () => apiClient.get('/reminders/active'),
+
   createMedicationReminder: (data: any) =>
     apiClient.post(`/medications`, data),
 
