@@ -201,14 +201,13 @@ export default function HomeScreen() {
           </View>
         )}
 
-        {/* Create Button */}
         <View className="px-6 pt-6 pb-8">
           <Button
             title="Create Medication"
             className="bg-primary rounded-full py-4 px-8"
             textClassName="text-white text-lg font-semibold"
             onPress={() =>
-              router.push("/(secured)/medication-intakes/medication-intakes")
+              router.push("/medication-intakes")
             }
           />
         </View>
