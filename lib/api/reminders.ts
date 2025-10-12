@@ -7,8 +7,8 @@ const remindersApi = {
   createMedicationReminder: (data: any) =>
     apiClient.post(`/medications`, data),
 
-  hydrationReminder: (data: createHydrationReminderRequest) =>
-    apiClient.post(`/reminder`, data),
+  hydrationReminder: (data: any) =>
+    apiClient.post(`/hydration`, data),
 
   doctorAppointmentReminder: (data: any) =>
     apiClient.post(`/appointments`, data),
