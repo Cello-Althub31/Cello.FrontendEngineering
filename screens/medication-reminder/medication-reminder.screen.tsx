@@ -3,6 +3,7 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  Alert,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -14,7 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import RNPickerSelect from "react-native-picker-select";
-import reminderApi from '@/lib/api/reminders';
+import remindersApi from '@/lib/api/reminders';
 
 const MedicationReminderScreen = () => {
   const handleGoBack = () => {
@@ -53,6 +54,7 @@ const MedicationReminderScreen = () => {
   const [frequency, setFrequency] = useState("");
   const [selectedSlot, setSelectedSlot] = useState("");
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
+   const [loading, setLoading] = useState(false);
 
   const handleAddSlot = () => {
     if (selectedSlot && !timeSlots.includes(selectedSlot)) {
@@ -66,25 +68,35 @@ const MedicationReminderScreen = () => {
   };
   const handleScreen = async () => {
     if (!name || !dose || !frequency || !timeSlots || !startDate || !endDate || !amount || !bloodType) {
-      alert("Please fill in all required fields.");
+     Alert.alert("Please fill in all required fields.");
       return;
     }
     try {
-      const response = await reminderApi.createReminder({
-        name,
+      setLoading(true);
+
+      const payload ={
+         name,
+        type:bloodType,
         dosage: dose,
+        amount,
         frequency,
         times: timeSlots,
         startDate,
         endDate,
-        amount,
-      });
-      console.log("Medication Reminders Created Succesfully", response.data);
-    } catch (error) {
-      console.log("error creating medication reminders: ", error);
-    }
-    router.push("/wellbeing-calendar");
-  };
+      };
+       const response = await remindersApi.doctorAppointmentReminder(payload);
+
+         console.log("Medication Reminder Created:", response.data);
+         Alert.alert("Success", "Reminder created successfully!");
+         router.push("/wellbeing-calendar");
+      } catch (error: any) {
+         console.error("Error creating appointment:", error.response?.data || error);
+         Alert.alert("Error", error.response?.data?.message || "Failed to create appointment.");
+      } finally {
+         setLoading(false);
+      }
+   }; 
+     
 
   return (
     <LinearGradient

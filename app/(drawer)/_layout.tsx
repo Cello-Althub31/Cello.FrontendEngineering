@@ -41,7 +41,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
             }}
           />
 
-          {/* User Name */}
+          {/* User Name
           <Text
             style={{
               fontSize: 18,
@@ -51,7 +51,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
             }}
           >
             Ruth Okwuokenye
-          </Text>
+          </Text> */}
 
           {/* View Profile Link */}
           <Text
@@ -183,7 +183,7 @@ export default function DrawerLayout() {
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="profile/index"
         options={{
           title: "",
@@ -196,7 +196,7 @@ export default function DrawerLayout() {
             </View>
           ),
         }}
-      />
+      /> */}
     </Drawer>
   );
 }

@@ -35,7 +35,7 @@ export default function SuccessScreen() {
           {info}
         </Text>
         <Button
-          onPress={() => { router.push("/auth/login") }}
+          onPress={() => { router.push("/welcome-profile") }}
           className="bg-primary mt-4 w-full"
           title={routeName.toString()}
           style={{ paddingVertical: 16, borderRadius: 8 }}

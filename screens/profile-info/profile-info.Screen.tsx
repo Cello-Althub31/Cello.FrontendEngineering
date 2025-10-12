@@ -34,7 +34,7 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
 
   const handleEditProfile = () => {
-    router.push("./profile-edit");
+    router.push("/profile");
   };
 
   useEffect(() => {

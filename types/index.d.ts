@@ -24,7 +24,10 @@ interface createMedicationReminderRequest {
   name: string;
   dosage: string;
   frequency: string;
-  times: string[];
+  type: string;
+  startDate: string; // ISO string
+  endDate: string; // ISO string
+  timeSlot: string;
   notificationSettings: { "snoozeMinutes": number };
 }
 interface createHydrationReminderRequest {
