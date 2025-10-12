@@ -7,9 +7,9 @@ import journalApi from '@/lib/api/journals';
 type FolderType = 'journal' | 'quick_notes' | 'goal_setting';
 
 const folderTypes: { label: string; value: FolderType }[] = [
-  { label: 'Journal', value: 'journal' },
-  { label: 'Quick Notes', value: 'quick_notes' },
-  { label: 'Goal Setting', value: 'goal_setting' },
+  // { label: 'Journal', value: 'journal' },
+  // { label: 'Quick Notes', value: 'quick_notes' },
+  // { label: 'Goal Setting', value: 'goal_setting' },
 ];
 
 const JournalScreen = () => {

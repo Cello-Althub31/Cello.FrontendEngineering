@@ -131,7 +131,7 @@ export default function MedicationDetailScreen() {
                   title="Yes"
                   onPress={() =>
                     router.push({
-                      pathname: "/medication-intakes/medication-intakes",
+                      pathname: "/medication-intakes",
                       params: {
                         route: "medicine-intakes",
                         title: "Medicine Deleted",

@@ -96,7 +96,7 @@ const MedicationReminderScreen = () => {
       console.log("Medication Created:", response.data);
 
       Alert.alert("Success", "Medication reminder created successfully!");
-      router.push("/wellbeing-calendar");
+      router.push("/home");
     } catch (error: any) {
       console.error("Error creating medication:", error.response?.data || error);
       Alert.alert("Error", error.response?.data?.message || "Failed to create medication.");
