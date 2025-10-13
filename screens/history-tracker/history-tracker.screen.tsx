@@ -188,7 +188,7 @@ export default function HistoryTracker() {
             style={styles.iconMedium}
           />
           <View>
-            <Text style={styles.historyCardTitle}>Missed</Text>
+            <Text style={styles.historyCardTitle}>Snoozed</Text>
             <Text style={styles.historyCardValue}>{historyData.totalMissed}</Text>
           </View>
         </View>

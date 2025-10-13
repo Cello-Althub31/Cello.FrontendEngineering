@@ -180,10 +180,10 @@ const SettingsScreen = () => {
                 <View style={styles.userImg}>
                   <FontAwesome6 name="user-large" size={40} color="#B22222" />
                 </View>
-                <View>
+                {/* <View>
                   <Text style={styles.profileName}>John Doe</Text>
                   <Text style={styles.profileHandle}>@johndoe</Text>
-                </View>
+                </View> */}
               </View>
             </View>
 
