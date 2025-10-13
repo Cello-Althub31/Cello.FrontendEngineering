@@ -65,6 +65,7 @@ export default function HomeScreen() {
       setError(null);
       const response = await remindersApi.getMedications();
       setMedications(response.data?.data || []);
+      console.log("Medications:", response.data.data);
     } catch (err) {
       console.error("Error fetching medications:", err);
       if (axios.isAxiosError(err) && err.response) {
@@ -88,22 +89,23 @@ export default function HomeScreen() {
   };
 
   const renderMedicationItem = ({ item }: { item: any }) => (
-    <View className="bg-white rounded-xl p-4 mb-4 mx-4 shadow-sm border border-gray-100">
-      <View className="flex-row justify-between items-center mb-2">
-        <Text className="text-lg font-semibold text-black">{item.name}</Text>
-        {item.is_active ? (
-          <Text className="text-green-600 text-sm font-medium">Active</Text>
-        ) : (
-          <Text className="text-gray-400 text-sm font-medium">Inactive</Text>
-        )}
+    <Pressable
+      onPress={() => router.push(`/medication-details?id=${item._id}`)}
+      // onPress={() => router.push('/medication-details')}
+      className="bg-white rounded-2xl shadow-sm border border-gray-100 mx-5 mb-4 p-4 flex-row justify-between items-center"
+    >
+      <View>
+        <Text className="text-base font-bold text-[#B94B4B]">{item.name}</Text>
+        <Text className="text-gray-600 text-sm">
+          {item.amount} {item.medication_type}, {item.dose}
+        </Text>
       </View>
-      <Text className="text-gray-600 text-sm mb-1">
-        Frequency: {item.frequency}x per day
-      </Text>
-      <Text className="text-gray-600 text-sm">
-        Times: {item.times?.join(", ")}
-      </Text>
-    </View>
+      <View className="bg-[#B94B4B] px-3 py-2 rounded-full">
+        <Text className="text-white text-sm font-semibold">
+          {item.time || "09:41"}
+        </Text>
+      </View>
+    </Pressable>
   );
 
   if (loading) {
@@ -128,9 +130,11 @@ export default function HomeScreen() {
     );
   }
 
+  const hasMedications = medications.length > 0;
+
   return (
     <GradientBackground colors={["#FFFFFF", "#F3AAAA"]}>
-      <SafeAreaView className="flex-1 bg-white pb-16">
+      <SafeAreaView className="flex-1 bg-white">
         {/* Header */}
         <View className="px-4">
           <Text className="text-xl font-poppins font-bold text-black">
@@ -145,6 +149,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
+        {/* Week selector */}
         <FlatList
           horizontal
           data={week}
@@ -157,18 +162,18 @@ export default function HomeScreen() {
               <Pressable
                 onPress={() => setSelectedDate(item.date)}
                 className={`w-14 h-14 items-center rounded-xl border mx-1 py-2 ${active
-                  ? "border-primary"
+                  ? "border-[#B94B4B]"
                   : "border-gray-200"
                   }`}
               >
                 <Text
-                  className={`text-base font-semibold ${active ? "text-primary" : "text-black"
+                  className={`text-base font-semibold ${active ? "text-[#B94B4B]" : "text-black"
                     }`}
                 >
                   {item.dayNum}
                 </Text>
                 <Text
-                  className={`text-[11px] mt-1 ${active ? "text-primary font-bold" : "text-gray-500"
+                  className={`text-[11px] mt-1 ${active ? "text-[#B94B4B] font-bold" : "text-gray-500"
                     }`}
                 >
                   {item.label}
@@ -178,39 +183,51 @@ export default function HomeScreen() {
           }}
         />
 
-        {medications.length > 0 ? (
-          <FlatList
-            data={medications}
-            keyExtractor={(item) => item._id}
-            renderItem={renderMedicationItem}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            contentContainerStyle={{ paddingVertical: 20 }}
-          />
+        {/* Content */}
+        {hasMedications ? (
+          <View className="flex-1">
+            <View className="items-center my-8">
+              <View className="w-36 h-36 rounded-full bg-[#F9E3E3] justify-center items-center">
+                <Text className="text-3xl font-bold text-[#B94B4B]">
+                  0/{medications.length}
+                </Text>
+                <Text className="text-sm text-[#B94B4B] mt-1">
+                  Wednesday
+                </Text>
+              </View>
+              <Text className="text-xl font-bold mt-6 text-[#B94B4B]">
+                Intakes
+              </Text>
+            </View>
+
+            <FlatList
+              data={medications}
+              keyExtractor={(item) => item._id}
+              renderItem={renderMedicationItem}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              contentContainerStyle={{ paddingVertical: 10 }}
+            />
+          </View>
         ) : (
-          <View className="flex-1 items-center py-32 justify-center">
+          <View className="flex-1 items-center justify-center py-24">
             <Image
               source={require("@/assets/icons/Vector (1).png")}
-              className="w-32 h-32 mb-4"
+              className="w-28 h-28 mb-4"
               resizeMode="contain"
             />
-            <Text className="text-gray-500 font-bold text-lg text-center">
+            <Text className="text-gray-500 font-semibold text-lg text-center mb-6">
               You do not have any medication.
             </Text>
+            <Button
+              title="Create Medication"
+              className="bg-[#B94B4B] rounded-full py-4 px-8"
+              textClassName="text-white text-lg font-semibold"
+              onPress={() => router.push("/medication-intakes")}
+            />
           </View>
         )}
-
-        <View className="px-6 pt-6 pb-8">
-          <Button
-            title="Create Medication"
-            className="bg-primary rounded-full py-4 px-8"
-            textClassName="text-white text-lg font-semibold"
-            onPress={() =>
-              router.push("/medication-intakes")
-            }
-          />
-        </View>
       </SafeAreaView>
     </GradientBackground>
   );
