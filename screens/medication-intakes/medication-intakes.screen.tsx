@@ -59,96 +59,93 @@ export default function MedicationIntakesScreen() {
   ];
 
   return (
-        <GradientBackground colors={["#FFFFFF", "#F3AAAA"]}>
-    <SafeAreaView className="flex-1 bg-white">
-      {/* Title + Month */}
-      <View className="px-4 pb-6">
-        <Text className="text-2xl font-poppins text-black">
-          Manage Medication
-        </Text>
-        <View className="flex-row justify-between py-4 items-center mt-1">
-          <Text className="text-lg text-black">Today</Text>
-          <Pressable className="flex-row items-center border border-white rounded-full px-3 py-1 space-x-2">
-            <Text className="text-sm text-black">March</Text>
-            <EvilIcons name="calendar" size={16} color="#111" />
-          </Pressable>
-        </View>
-      </View>
-
-      {/* Date strip */}
-      <FlatList
-        horizontal
-        data={week}
-        keyExtractor={(i) => i.key}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16, marginTop: 8 }}
-        renderItem={({ item }) => {
-          const active = isSameDay(item.date, selectedDate);
-          return (
-            <Pressable
-              onPress={() => setSelectedDate(item.date)}
-              className={`w-14 h-14 items-center rounded-xl border mx-1 py-2 ${
-                active ? "border-primary bg-primary/10" : "border-white"
-              }`}
-            >
-              <Text
-                className={`text-base font-semibold ${
-                  active ? "text-primary" : "text-black"
-                }`}
-              >
-                {item.dayNum}
-              </Text>
-              <Text
-                className={`text-[11px] mt-1 ${
-                  active ? "text-primary font-bold" : "text-grey"
-                }`}
-              >
-                {item.label}
-              </Text>
+    <GradientBackground colors={["#FFFFFF", "#F3AAAA"]}>
+      <SafeAreaView className="flex-1 bg-white">
+        {/* Title + Month */}
+        <View className="px-4 pb-6">
+          <Text className="text-2xl font-poppins text-black">
+            Manage Medication
+          </Text>
+          <View className="flex-row justify-between py-4 items-center mt-1">
+            <Text className="text-lg text-black">Today</Text>
+            <Pressable className="flex-row items-center border border-white rounded-full px-3 py-1 space-x-2">
+              <Text className="text-sm text-black">March</Text>
+              <EvilIcons name="calendar" size={16} color="#111" />
             </Pressable>
-          );
-        }}
-      />
-
-      {/* Intakes summary circle */}
-      <View className="flex items-center justify-center mt-0 pb-12">
-        <Text className="text-2xl font-bold text-red-700 mt-6">Intakes</Text>
-        <View className="w-60 h-60 rounded-full bg-pink-200 items-center justify-center">
-          <Image
-            source={require("@/assets/icons/pill2.png")}
-            className="w-6 h-6 mb-1"
-            resizeMode="contain"
-          />
-          <Text className="text-red-700 text-6xl font-bold">0/2</Text>
-          <Text className="text-sm text-grey">Wednesday</Text>
+          </View>
         </View>
-       
-      </View>
 
-      {/* Intake list */}
-      <View className="px-4 mt-8 space-y-32 pb-16">
-        {intakes.map((item) => (
-          <Pressable
-            key={item.id}
-            onPress={() =>
-              router.push({
-                pathname: "/(secured)/medication-details",
-                params: { id: item.id },
-              })
-            }
-            className="flex-row justify-between items-center bg-white shadow-sm rounded-xl border-separate px-4 py-4"
-          >
-            <View>
-              <Text className="text-black font-semibold">{item.name}</Text>
-              <Text className="text-grey text-sm">{item.dosage}</Text>
-            </View>
-            <View className="bg-red-700 px-3 py-1 rounded-md">
-              <Text className="text-white text-sm font-bold">{item.time}</Text>
-            </View>
-          </Pressable>
-        ))}
-      </View>
-    </SafeAreaView>
+        {/* Date strip */}
+        <FlatList
+          horizontal
+          data={week}
+          keyExtractor={(i) => i.key}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16, marginTop: 8 }}
+          renderItem={({ item }) => {
+            const active = isSameDay(item.date, selectedDate);
+            return (
+              <Pressable
+                onPress={() => setSelectedDate(item.date)}
+                className={`w-14 h-14 items-center rounded-xl border mx-1 py-2 ${active ? "border-primary bg-primary/10" : "border-white"
+                  }`}
+              >
+                <Text
+                  className={`text-base font-semibold ${active ? "text-primary" : "text-black"
+                    }`}
+                >
+                  {item.dayNum}
+                </Text>
+                <Text
+                  className={`text-[11px] mt-1 ${active ? "text-primary font-bold" : "text-grey"
+                    }`}
+                >
+                  {item.label}
+                </Text>
+              </Pressable>
+            );
+          }}
+        />
+
+        {/* Intakes summary circle */}
+        <View className="flex items-center justify-center mt-0 pb-12">
+          <Text className="text-2xl font-bold text-red-700 mt-6">Intakes</Text>
+          <View className="w-60 h-60 rounded-full bg-pink-200 items-center justify-center">
+            <Image
+              source={require("@/assets/icons/pill2.png")}
+              className="w-6 h-6 mb-1"
+              resizeMode="contain"
+            />
+            <Text className="text-red-700 text-6xl font-bold">0/2</Text>
+            <Text className="text-sm text-grey">Wednesday</Text>
+          </View>
+
+        </View>
+
+        {/* Intake list */}
+        <View className="px-4 mt-8 space-y-32 pb-16">
+          {intakes.map((item) => (
+            <Pressable
+              key={item.id}
+              onPress={() =>
+                router.push({
+                  pathname: "/(secured)/medication-details",
+                  params: { id: item.id },
+                })
+              }
+              className="flex-row justify-between items-center bg-white shadow-sm rounded-xl border-separate px-4 py-4"
+            >
+              <View>
+                <Text className="text-black font-semibold">{item.name}</Text>
+                <Text className="text-grey text-sm">{item.dosage}</Text>
+              </View>
+              <View className="bg-red-700 px-3 py-1 rounded-md">
+                <Text className="text-white text-sm font-bold">{item.time}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+      </SafeAreaView>
     </GradientBackground>
   );
 }
