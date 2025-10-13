@@ -2,7 +2,7 @@ import apiClient from '@/lib/utils/apiClient';
 
 
 const remindersApi = {
-  getById: (id: string) => apiClient.get(`/medications/${id}`),
+  getMedicationsById: (id: string) => apiClient.get(`/medications/${id}`),
 
   getActiveReminder: () => apiClient.get('/reminders/active'),
 
