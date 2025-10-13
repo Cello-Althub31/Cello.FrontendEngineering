@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 16.15.0",
+    "version": ">= 16.21.0",
     "appVersionSource": "remote"
   },
   "build": {
@@ -9,7 +9,13 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URI": "https://ngp7n5pby2.execute-api.eu-west-1.amazonaws.com/dev/api"
+      }
     },
     "production": {
       "autoIncrement": true
