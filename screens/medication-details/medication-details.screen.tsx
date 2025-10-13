@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import GradientBackground from "@/components/shared/gradient-bg";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Button from "@/components/ui/Button";
-import { Ionicons, AntDesign, Fontisto } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import remindersApi from "@/lib/api/reminders";
 import axios from "axios";
 
@@ -32,15 +32,21 @@ export default function MedicationDetailScreen() {
     try {
       setError(null);
       setLoading(true);
-      const response = await remindersApi.getMedicationsById(id as string);
-      console.log(response.data.data)
-      const data = response.data?.data;
 
-      if (!data) throw new Error("No data received");
+      // ✅ Fetch medication details
+      const medicationRes = await remindersApi.getMedicationsById(id as string);
+      const medicationData = medicationRes.data?.data;
 
-      setMedication(data);
-      setLogs(data.logs || []);
-      setSummary(data.summary || {});
+      if (!medicationData) throw new Error("No medication data received");
+
+      setMedication(medicationData);
+      setLogs(medicationData.logs || []);
+
+      // ✅ Fetch summary data separately
+      const summaryRes = await remindersApi.getMedicationSummary(id as string);
+      console.log(summaryRes.data)
+      setSummary(summaryRes.data?.data || null);
+
     } catch (err: any) {
       console.error("Error fetching medication details:", err);
       if (axios.isAxiosError(err) && err.response) {
@@ -130,6 +136,7 @@ export default function MedicationDetailScreen() {
               </Text>
             </View>
 
+            {/* ✅ Today's Summary */}
             {summary?.today && (
               <View className="bg-[#FFF5F5] rounded-xl p-4 mt-4">
                 <Text className="text-[#B94B4B] font-bold mb-2 text-center">
@@ -137,10 +144,43 @@ export default function MedicationDetailScreen() {
                 </Text>
                 <Text className="text-gray-700 text-center">
                   Scheduled: {summary.today.scheduled} | Taken:{" "}
-                  {summary.today.taken} | Missed: {summary.today.missed}
+                  {summary.today.taken} | Missed: {summary.today.missed} | Snoozed:{" "}
+                  {summary.today.snoozed}
                 </Text>
                 <Text className="text-gray-700 text-center mt-1">
                   Adherence: {(summary.today.adherence * 100).toFixed(0)}%
+                </Text>
+              </View>
+            )}
+
+            {/* ✅ Lifetime Summary */}
+            {summary?.lifetime && (
+              <View className="bg-[#FFF5F5] rounded-xl p-4 mt-4">
+                <Text className="text-[#B94B4B] font-bold mb-2 text-center">
+                  Lifetime Summary
+                </Text>
+                <Text className="text-gray-700 text-center">
+                  Total Logs: {summary.lifetime.totalLogs} | Taken:{" "}
+                  {summary.lifetime.taken} | Missed: {summary.lifetime.missed}
+                </Text>
+              </View>
+            )}
+
+            {/* ✅ Stock Summary */}
+            {summary?.stock && (
+              <View className="bg-[#FFF5F5] rounded-xl p-4 mt-4">
+                <Text className="text-[#B94B4B] font-bold mb-2 text-center">
+                  Stock Summary
+                </Text>
+                <Text className="text-gray-700 text-center">
+                  Starting Quantity: {summary.stock.startingQuantity}
+                </Text>
+                <Text className="text-gray-700 text-center">
+                  Remaining: {summary.stock.remaining}
+                </Text>
+                <Text className="text-gray-700 text-center">
+                  Refill Reminder Threshold:{" "}
+                  {summary.stock.refillReminderThreshold}
                 </Text>
               </View>
             )}
